@@ -51,8 +51,5 @@ build/
 # Logs
 *.log
 
-# Hibernate config with secrets (если есть)
-src/main/resources/hibernate.cfg.xml
-
 # OS files
 Thumbs.db
