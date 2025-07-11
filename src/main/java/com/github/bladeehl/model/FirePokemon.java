@@ -1,35 +1,21 @@
-package org.example.models;
+package com.github.bladeehl.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue("Fire")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class FirePokemon extends Pokemon {
 
     int fireResistance;
     int firePower;
-
-    public FirePokemon(
-        final String name,
-        final int health,
-        final int damage,
-        final int fireResistance,
-        final int firePower
-    ) {
-        super(null, name, health, damage, null, false, 0, 0, null);
-        this.fireResistance = Math.max(0, fireResistance);
-        this.firePower = Math.max(0, firePower);
-    }
 
     public void fireBall(final Pokemon target) {
         target.takeDamage(firePower + 20);
@@ -61,9 +47,7 @@ public class FirePokemon extends Pokemon {
 
     @Override
     public String toString() {
-        return String.format(
-            "Fire  | %-10s | HP:%-4d | DMG:%-3d | FireRes:%-3d | FirePwr:%-3d",
-            getName(), getHealth(), getDamage(), fireResistance, firePower
-        );
+        return "Fire  | %-10s | HP:%-4d | DMG:%-3d | FireRes:%-3d | FirePwr:%-3d"
+            .formatted(getName(), getHealth(), getDamage(), fireResistance, firePower);
     }
 }

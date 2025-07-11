@@ -1,35 +1,20 @@
-package org.example.models;
+package com.github.bladeehl.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue("Water")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class WaterPokemon extends Pokemon {
 
     int waterResistance;
     int waterPower;
-
-    public WaterPokemon(
-        final String name,
-        final int health,
-        final int damage,
-        final int waterResistance,
-        final int waterPower
-    ) {
-        super(null, name, health, damage, null, false, 0, 0, null);
-        this.waterResistance = Math.max(0, waterResistance);
-        this.waterPower = Math.max(0, waterPower);
-    }
 
     public void waterHide() {
         setImmuneNextTurn(true);
@@ -61,9 +46,8 @@ public class WaterPokemon extends Pokemon {
 
     @Override
     public String toString() {
-        return String.format(
-            "Water | %-10s | HP:%-4d | DMG:%-3d | WaterRes:%-3d | WaterPwr:%-3d",
-            getName(), getHealth(), getDamage(), waterResistance, waterPower
-        );
+        return "Water | %-10s | HP:%-4d | DMG:%-3d | WaterRes:%-3d | WaterPwr:%-3d"
+            .formatted(getName(), getHealth(), getDamage(), waterResistance, waterPower);
     }
+
 }
