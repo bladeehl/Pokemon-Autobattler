@@ -8,9 +8,9 @@ import lombok.val;
 
 @Getter
 public class BattleService {
-    private Pokemon firstPokemon;
-    private Pokemon secondPokemon;
-    private boolean isFirstPlayersTurn;
+    Pokemon firstPokemon;
+    Pokemon secondPokemon;
+    boolean isFirstPlayersTurn;
 
     public boolean canBattle(final int numberOfPokemons) {
         return numberOfPokemons >= 2;

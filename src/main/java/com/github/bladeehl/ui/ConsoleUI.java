@@ -10,7 +10,7 @@ import lombok.val;
 
 @Slf4j
 public class ConsoleUI {
-    private Boolean isRunning = true;
+    Boolean isRunning = true;
 
     public void run() {
         while (isRunning) {

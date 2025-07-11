@@ -18,16 +18,16 @@ public class PokemonService {
         final int fireResistance,
         final int firePower
     ) {
-        val firePokemon = FirePokemon.builder()
-            .name(name)
-            .health(health)
-            .damage(damage)
-            .fireResistance(Math.max(0, fireResistance))
-            .firePower(Math.max(0, firePower))
-            .trainer(trainer)
-            .build();
-
-        pokemonRepository.savePokemon(firePokemon);
+        pokemonRepository.savePokemon(
+            FirePokemon.builder()
+                .name(name)
+                .health(health)
+                .damage(damage)
+                .fireResistance(Math.max(0, fireResistance))
+                .firePower(Math.max(0, firePower))
+                .trainer(trainer)
+                .build()
+        );
     }
 
     public static void saveWaterPokemon(
@@ -38,17 +38,18 @@ public class PokemonService {
         final int waterResistance,
         final int waterPower
     ) {
-        val waterPokemon = WaterPokemon.builder()
-            .name(name)
-            .health(health)
-            .damage(damage)
-            .waterResistance(Math.max(0, waterResistance))
-            .waterPower(Math.max(0, waterPower))
-            .trainer(trainer)
-            .build();
-
-        pokemonRepository.savePokemon(waterPokemon);
+        pokemonRepository.savePokemon(
+            WaterPokemon.builder()
+                .name(name)
+                .health(health)
+                .damage(damage)
+                .waterResistance(Math.max(0, waterResistance))
+                .waterPower(Math.max(0, waterPower))
+                .trainer(trainer)
+                .build()
+        );
     }
+
 
     public static List<Pokemon> getPokemonsByTrainer(final Trainer trainer) {
         return pokemonRepository.getPokemonsByTrainer(trainer);

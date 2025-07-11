@@ -11,7 +11,7 @@ import lombok.val;
 @Slf4j
 public class BattleUI {
 
-    private final BattleService battleService = new BattleService();
+    final BattleService battleService = new BattleService();
 
     public void startBattle(final Trainer trainer) {
         val pokemons = PokemonService.getPokemonsByTrainer(trainer);
