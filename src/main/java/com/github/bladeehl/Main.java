@@ -5,7 +5,9 @@ import com.github.bladeehl.ui.ConsoleUI;
 
 public class Main {
     public static void main(final String[] args) {
-        Runtime.getRuntime().addShutdownHook(new Thread(DatabaseHelper::shutdown));
+        Runtime.getRuntime()
+            .addShutdownHook(new Thread(DatabaseHelper::shutdown));
+
         new ConsoleUI().run();
     }
 }

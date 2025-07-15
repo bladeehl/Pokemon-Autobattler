@@ -6,7 +6,6 @@ import com.github.bladeehl.model.Trainer;
 import java.util.List;
 
 public class TrainerRepository {
-
     public List<Trainer> getAllTrainers() {
         return DatabaseHelper.returnInTransaction(session ->
             session.createQuery("from Trainer", Trainer.class)
@@ -16,5 +15,4 @@ public class TrainerRepository {
     public void saveTrainer(final Trainer trainer) {
         DatabaseHelper.doInTransaction(session -> session.persist(trainer));
     }
-
 }

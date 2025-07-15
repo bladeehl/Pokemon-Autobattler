@@ -6,17 +6,17 @@ import com.github.bladeehl.services.BattleService;
 import com.github.bladeehl.utils.InputUtils;
 import com.github.bladeehl.utils.OutputUtils;
 import lombok.extern.slf4j.Slf4j;
+import lombok.NonNull;
 import lombok.val;
 
 @Slf4j
 public class BattleUI {
-
     final BattleService battleService = new BattleService();
 
-    public void startBattle(final Trainer trainer) {
+    public void startBattle(final @NonNull Trainer trainer) {
         val pokemons = PokemonService.getPokemonsByTrainer(trainer);
 
-        if (!battleService.canBattle(pokemons.size())) {
+        if (!trainer.canBattle()){
             log.warn("Меньше двух покемонов");
             System.out.println("Нужно минимум 2 покемона для боя.");
             return;
@@ -33,7 +33,11 @@ public class BattleUI {
             || secondIndex < 0
             || firstIndex >= pokemons.size()
             || secondIndex >= pokemons.size()) {
-            log.warn("Некорректный выбор покемонов для битвы: first={}, second={}", firstIndex + 1, secondIndex + 1);
+
+            log.warn("Некорректный выбор покемонов для битвы: first={}," +
+                " second={}",
+                firstIndex + 1,
+                secondIndex + 1);
             System.out.println("Некорректный выбор покемонов. Бой отменён.");
             return;
         }
@@ -46,7 +50,9 @@ public class BattleUI {
             ⚔️ Битва начинается!
             %s VS %s
             ⚔️⚔️⚔️⚔️⚔️⚔️⚔️⚔️⚔️⚔️⚔️
-            %n%n""", firstPokemon.getName(), secondPokemon.getName());
+            %n%n""",
+            firstPokemon.getName(),
+            secondPokemon.getName());
 
         battleService.startBattle(firstPokemon, secondPokemon);
 
@@ -69,7 +75,8 @@ public class BattleUI {
             switch (choice) {
                 case 1 -> {
                     val dmg = battleService.attack(playablePokemon, opponentPokemon);
-                    System.out.printf("💥 %s атаковал %s на %d урона%n",
+                    System.out.printf(
+                        "💥 %s атаковал %s на %d урона%n",
                         playablePokemon.getName(),
                         opponentPokemon.getName(),
                         dmg);
@@ -102,13 +109,16 @@ public class BattleUI {
             }
 
             System.out.printf("📊 %s (HP: %d) vs %s (HP: %d)%n%n",
-                firstPokemon.getName(), firstPokemon.getHealth(),
-                secondPokemon.getName(), secondPokemon.getHealth());
+                firstPokemon.getName(),
+                firstPokemon.getHealth(),
+                secondPokemon.getName(),
+                secondPokemon.getHealth());
 
             battleService.nextTurn();
         }
 
         val winner = battleService.getWinner();
+
         System.out.printf("🏆 Победитель: %s!%n", winner.getName());
     }
 }

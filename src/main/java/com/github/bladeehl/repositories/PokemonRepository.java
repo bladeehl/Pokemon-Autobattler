@@ -8,12 +8,6 @@ import lombok.val;
 import java.util.List;
 
 public class PokemonRepository {
-    public List<Pokemon> getAllPokemons() {
-        return DatabaseHelper.returnInTransaction(session ->
-            session.createQuery("from Pokemon", Pokemon.class)
-                .list());
-    }
-
     public List<Pokemon> getPokemonsByTrainer(final Trainer trainer) {
         return DatabaseHelper.returnInTransaction(session -> {
             val managedTrainer = session.merge(trainer);
@@ -32,8 +26,7 @@ public class PokemonRepository {
     }
 
     public void deletePokemon(final Pokemon pokemon) {
-        DatabaseHelper.doInTransaction(session -> {
-            session.remove(session.merge(pokemon));
-        });
+        DatabaseHelper.doInTransaction(session ->
+            session.remove(session.merge(pokemon)));
     }
 }

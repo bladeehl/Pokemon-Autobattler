@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Trainer {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -23,8 +22,12 @@ public class Trainer {
         mappedBy = "trainer",
         cascade = CascadeType.ALL,
         orphanRemoval = true,
-        fetch = FetchType.LAZY
+        fetch = FetchType.EAGER
     )
     @Builder.Default
     List<Pokemon> pokemons = new ArrayList<>();
+
+    public boolean canBattle(){
+        return pokemons.size() >= 2;
+    }
 }

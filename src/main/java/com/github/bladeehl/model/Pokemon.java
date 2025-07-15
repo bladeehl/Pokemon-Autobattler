@@ -13,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public abstract class Pokemon {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -35,16 +34,13 @@ public abstract class Pokemon {
     @Transient
     int counterDamage;
 
-    @Transient
-    Pokemon lastAttacker;
-
-    public abstract void attack(Pokemon target);
+    public abstract int attack(Pokemon target);
 
     public abstract void defend();
 
     public abstract void evolve();
 
-    public abstract void ability();
+    public abstract int ability();
 
     public void takeDamage(final int damage) {
         if (immuneNextTurn) {
@@ -54,9 +50,5 @@ public abstract class Pokemon {
 
         val finalDamage = Math.max(0, damage - damageReduction);
         health = Math.max(0, health - finalDamage);
-    }
-
-    public void unImmune() {
-        immuneNextTurn = false;
     }
 }

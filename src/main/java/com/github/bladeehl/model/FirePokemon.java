@@ -9,16 +9,15 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorValue("Fire")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @SuperBuilder
 
 public class FirePokemon extends Pokemon {
-
     int fireResistance;
     int firePower;
-
-    public void fireBall(final Pokemon target) {
+    public int fireBall(final Pokemon target) {
+        val hpBefore = target.getHealth();
         target.takeDamage(firePower + 20);
+        return hpBefore - target.getHealth();
     }
 
     public void fireThorns() {
@@ -26,8 +25,10 @@ public class FirePokemon extends Pokemon {
     }
 
     @Override
-    public void attack(final Pokemon target) {
+    public int attack(final Pokemon target) {
+        val hpBefore = target.getHealth();
         target.takeDamage(getDamage());
+        return hpBefore - target.getHealth();
     }
 
     @Override
@@ -41,8 +42,9 @@ public class FirePokemon extends Pokemon {
     }
 
     @Override
-    public void ability() {
-        setDamage(getDamage() + 5);
+    public int ability() {
+        setDamage(getDamage() + fireResistance / 5);
+        return 0;
     }
 
     @Override

@@ -2,12 +2,11 @@ package com.github.bladeehl.services;
 
 import com.github.bladeehl.model.*;
 import com.github.bladeehl.repositories.PokemonRepository;
-import lombok.val;
+import lombok.NonNull;
 
 import java.util.List;
 
 public class PokemonService {
-
     private static final PokemonRepository pokemonRepository = new PokemonRepository();
 
     public static void saveFirePokemon(
@@ -16,8 +15,7 @@ public class PokemonService {
         final int health,
         final int damage,
         final int fireResistance,
-        final int firePower
-    ) {
+        final int firePower) {
         pokemonRepository.savePokemon(
             FirePokemon.builder()
                 .name(name)
@@ -26,8 +24,7 @@ public class PokemonService {
                 .fireResistance(Math.max(0, fireResistance))
                 .firePower(Math.max(0, firePower))
                 .trainer(trainer)
-                .build()
-        );
+                .build());
     }
 
     public static void saveWaterPokemon(
@@ -36,8 +33,7 @@ public class PokemonService {
         final int health,
         final int damage,
         final int waterResistance,
-        final int waterPower
-    ) {
+        final int waterPower) {
         pokemonRepository.savePokemon(
             WaterPokemon.builder()
                 .name(name)
@@ -46,20 +42,19 @@ public class PokemonService {
                 .waterResistance(Math.max(0, waterResistance))
                 .waterPower(Math.max(0, waterPower))
                 .trainer(trainer)
-                .build()
-        );
+                .build());
     }
 
 
-    public static List<Pokemon> getPokemonsByTrainer(final Trainer trainer) {
+    public static List<Pokemon> getPokemonsByTrainer(final @NonNull Trainer trainer) {
         return pokemonRepository.getPokemonsByTrainer(trainer);
     }
 
-    public static void updatePokemon(final Pokemon pokemon) {
+    public static void updatePokemon(final @NonNull Pokemon pokemon) {
         pokemonRepository.updatePokemon(pokemon);
     }
 
-    public static void deletePokemon(final Pokemon pokemon) {
+    public static void deletePokemon(final @NonNull Pokemon pokemon) {
         pokemonRepository.deletePokemon(pokemon);
     }
 }
