@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.bladeehl</groupId>
-    <artifactId>Pokemon-Autobattler</artifactId>
+    <artifactId>pokemon-autobattler</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -42,12 +42,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.9</version>
         </dependency>
 
         <dependency>
