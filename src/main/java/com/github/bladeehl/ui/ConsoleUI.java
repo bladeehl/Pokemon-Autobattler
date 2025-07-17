@@ -17,10 +17,10 @@ public class ConsoleUI {
     final PokemonService pokemonService = new PokemonService();
 
     public void run() {
-        while(true) {
+        while (true) {
             val trainer = showTrainerMenu();
 
-            if(trainer == null) {
+            if (trainer == null) {
                 System.out.println("Выход");
                 break;
             }
@@ -30,7 +30,7 @@ public class ConsoleUI {
     }
 
     private Trainer showTrainerMenu() {
-        while(true) {
+        while (true) {
             System.out.println("""
                 
                 --- Тренерское меню ---
@@ -84,6 +84,7 @@ public class ConsoleUI {
 
         while (true) {
             val selectedIndex = InputUtils.promptForInt("Выберите номер: ");
+
             try {
                 return trainerService.getTrainerByIndex(selectedIndex);
             } catch (TrainerNotFoundException thrown) {
@@ -94,7 +95,7 @@ public class ConsoleUI {
     }
 
     private void showTrainerActions(final @NonNull Trainer trainer) {
-        while(true) {
+        while (true) {
             System.out.printf("""
             
             --- Меню %s ---
@@ -110,7 +111,7 @@ public class ConsoleUI {
             val userChoice = InputUtils.promptForInt("Выбор: ");
 
             switch (userChoice) {
-                case 1 -> new BattleUI().startBattle(trainer);
+                case 1 -> new BattleUI(pokemonService).startBattle(trainer);
                 case 2 -> createPokemon(trainer);
                 case 3 -> updatePokemon(trainer);
                 case 4 -> deletePokemon(trainer);

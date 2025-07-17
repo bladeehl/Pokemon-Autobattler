@@ -13,7 +13,11 @@ import lombok.val;
 @Slf4j
 public class BattleUI {
     final BattleService battleService = new BattleService();
-    final PokemonService pokemonService = new PokemonService();
+    final PokemonService pokemonService;
+
+    public BattleUI(PokemonService pokemonService) {
+        this.pokemonService = pokemonService;
+    }
 
     public void startBattle(final @NonNull Trainer trainer) {
         val pokemons = pokemonService.getPokemonsByTrainer(trainer);
@@ -37,7 +41,7 @@ public class BattleUI {
             || secondIndex >= pokemons.size()) {
 
             log.warn(
-                "Некорректный выбор покемонов для битвы: first={}," + " second={}",
+                "Некорректный выбор покемонов для битвы: first={}, second={}",
                 firstIndex + 1,
                 secondIndex + 1);
 
@@ -100,7 +104,7 @@ public class BattleUI {
                         val dmg = battleService.specialAttack(playablePokemon, opponentPokemon);
                         System.out.printf("🔥 Спец. атака нанесла %d урона%n", dmg);
                     } catch (UnsupportedPokemonTypeException thrown) {
-                        log.error("Ошибка спец. атаки: {}", thrown.getMessage());
+                        log.error("Ошибка спец. атаки", thrown);
                         System.out.println("Ошибка: " + thrown.getMessage());
                     }
                 }
@@ -109,7 +113,7 @@ public class BattleUI {
                         battleService.defensiveAbility(playablePokemon);
                         System.out.println("🛡️ Защитная способность активирована.");
                     } catch (UnsupportedPokemonTypeException thrown) {
-                        log.error("Ошибка защитной способности: {}", thrown.getMessage());
+                        log.error("Ошибка защитной способности", thrown);
                         System.out.println("Ошибка: " + thrown.getMessage());
                     }
                 }

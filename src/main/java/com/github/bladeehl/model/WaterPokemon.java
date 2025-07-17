@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-
 public class WaterPokemon extends Pokemon {
     int waterResistance;
     int waterPower;
@@ -47,7 +46,7 @@ public class WaterPokemon extends Pokemon {
 
     @Override
     public int ability() {
-        val hpBefore =  getHealth();
+        val hpBefore = getHealth();
         setHealth(getHealth() + waterPower);
 
         return getHealth() - hpBefore;

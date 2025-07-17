@@ -46,15 +46,15 @@ public class BattleService {
         return playablePokemon.attack(opponentPokemon);
     }
 
-    public void defend(final Pokemon playablePokemon) {
+    public void defend(final @NonNull Pokemon playablePokemon) {
         playablePokemon.defend();
     }
 
-    public int useAbility(final Pokemon playablePokemon) {
+    public int useAbility(final @NonNull Pokemon playablePokemon) {
         return playablePokemon.ability();
     }
 
-    public int specialAttack(final Pokemon playablePokemon, final Pokemon opponentPokemon) {
+    public int specialAttack(final @NonNull Pokemon playablePokemon, final @NonNull Pokemon opponentPokemon) {
         if (playablePokemon instanceof FirePokemon firePokemon) {
             return firePokemon.fireBall(opponentPokemon);
         }
@@ -66,7 +66,7 @@ public class BattleService {
         throw new UnsupportedPokemonTypeException("Неподдерживаемый тип покемона для спец. атаки");
     }
 
-    public void defensiveAbility(final Pokemon playablePokemon) {
+    public void defensiveAbility(final @NonNull Pokemon playablePokemon) {
         if (playablePokemon instanceof FirePokemon firePokemon) {
             firePokemon.fireThorns();
             return;
@@ -80,7 +80,7 @@ public class BattleService {
         throw new UnsupportedPokemonTypeException("Неподдерживаемый тип покемона для защитной способности");
     }
 
-    public void evolve(final Pokemon playablePokemon) {
+    public void evolve(final @NonNull Pokemon playablePokemon) {
         playablePokemon.evolve();
     }
 

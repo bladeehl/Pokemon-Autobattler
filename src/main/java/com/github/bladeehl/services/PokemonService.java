@@ -10,8 +10,8 @@ public class PokemonService {
     private final PokemonRepository pokemonRepository = new PokemonRepository();
 
     public void saveFirePokemon(
-        final Trainer trainer,
-        final String name,
+        final @NonNull Trainer trainer,
+        final @NonNull String name,
         final int health,
         final int damage,
         final int fireResistance,
@@ -29,8 +29,8 @@ public class PokemonService {
     }
 
     public void saveWaterPokemon(
-        final Trainer trainer,
-        final String name,
+        final @NonNull Trainer trainer,
+        final @NonNull String name,
         final int health,
         final int damage,
         final int waterResistance,

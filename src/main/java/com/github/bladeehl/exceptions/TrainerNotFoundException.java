@@ -1,7 +1,7 @@
 package com.github.bladeehl.exceptions;
 
+import lombok.experimental.StandardException;
+
+@StandardException
 public class TrainerNotFoundException extends RuntimeException {
-    public TrainerNotFoundException(final String message) {
-        super(message);
-    }
 }
