@@ -1,6 +1,8 @@
 package com.github.bladeehl.ui;
 
+import com.github.bladeehl.exceptions.TrainerNotFoundException;
 import com.github.bladeehl.model.Trainer;
+import com.github.bladeehl.services.BattleService;
 import com.github.bladeehl.services.PokemonService;
 import com.github.bladeehl.utils.InputUtils;
 import com.github.bladeehl.services.TrainerService;
@@ -11,21 +13,24 @@ import lombok.val;
 
 @Slf4j
 public class ConsoleUI {
+    final TrainerService trainerService = new TrainerService();
+    final PokemonService pokemonService = new PokemonService();
 
     public void run() {
-        while(true){
+        while(true) {
             val trainer = showTrainerMenu();
 
-            if(trainer == null){
+            if(trainer == null) {
                 System.out.println("Выход");
                 break;
             }
+
             showTrainerActions(trainer);
         }
     }
 
     private Trainer showTrainerMenu() {
-        while (true) {
+        while(true) {
             System.out.println("""
                 
                 --- Тренерское меню ---
@@ -60,7 +65,7 @@ public class ConsoleUI {
 
     private Trainer handleCreateTrainer() {
         val trainerName = InputUtils.promptForString("Введите имя: ");
-        val newTrainer = TrainerService.createTrainer(trainerName);
+        val newTrainer = trainerService.createTrainer(trainerName);
 
         System.out.println("Тренер создан.");
 
@@ -68,7 +73,7 @@ public class ConsoleUI {
     }
 
     private Trainer handleSelectTrainer() {
-        val allTrainers = TrainerService.getAllTrainers();
+        val allTrainers = trainerService.getAllTrainers();
 
         if (allTrainers.isEmpty()) {
             System.out.println("Тренеров нет.");
@@ -77,20 +82,19 @@ public class ConsoleUI {
 
         OutputUtils.printTrainers(allTrainers);
 
-        val selectedIndex = InputUtils.promptForInt("Выберите номер: ");
-
-        try {
-            return TrainerService.getTrainerByIndex(selectedIndex);
-        } catch (IllegalArgumentException thrown) {
-            log.warn("Пользователь ввёл некорректный индекс тренера: {}", selectedIndex);
-            System.out.println("Некорректный выбор.");
-            return null;
+        while (true) {
+            val selectedIndex = InputUtils.promptForInt("Выберите номер: ");
+            try {
+                return trainerService.getTrainerByIndex(selectedIndex);
+            } catch (TrainerNotFoundException thrown) {
+                log.warn("Некорректный индекс: {}", selectedIndex);
+                System.out.println("Некорректный выбор. Попробуйте снова.");
+            }
         }
     }
 
-
     private void showTrainerActions(final @NonNull Trainer trainer) {
-        while (true) {
+        while(true) {
             System.out.printf("""
             
             --- Меню %s ---
@@ -101,7 +105,7 @@ public class ConsoleUI {
             5. Показать покемонов
             0. Назад
             """,
-                trainer.getName());
+            trainer.getName());
 
             val userChoice = InputUtils.promptForInt("Выбор: ");
 
@@ -133,7 +137,7 @@ public class ConsoleUI {
                 val fireRes = InputUtils.promptForInt("Огненная защита: ");
                 val firePwr = InputUtils.promptForInt("Огненная сила: ");
 
-                PokemonService.saveFirePokemon(
+                pokemonService.saveFirePokemon(
                     trainer,
                     name,
                     hp,
@@ -145,7 +149,7 @@ public class ConsoleUI {
                 val waterRes = InputUtils.promptForInt("Водная защита: ");
                 val waterPwr = InputUtils.promptForInt("Водная сила: ");
 
-                PokemonService.saveWaterPokemon(
+                pokemonService.saveWaterPokemon(
                     trainer,
                     name,
                     hp,
@@ -161,23 +165,13 @@ public class ConsoleUI {
     }
 
     private void showPokemons(final @NonNull Trainer trainer) {
-        val pokemons = PokemonService.getPokemonsByTrainer(trainer);
-
-        if (pokemons.isEmpty()) {
-            OutputUtils.noPokemons();
-            return;
-        }
+        val pokemons = pokemonService.getPokemonsByTrainer(trainer);
 
         OutputUtils.printPokemons(pokemons);
     }
 
     private void updatePokemon(final @NonNull Trainer trainer) {
-        val pokemons = PokemonService.getPokemonsByTrainer(trainer);
-
-        if (pokemons.isEmpty()) {
-            OutputUtils.noPokemons();
-            return;
-        }
+        val pokemons = pokemonService.getPokemonsByTrainer(trainer);
 
         OutputUtils.printPokemons(pokemons);
 
@@ -208,21 +202,17 @@ public class ConsoleUI {
             default -> System.out.println("Неверный выбор.");
         }
 
-        PokemonService.updatePokemon(selectedPokemon);
+        pokemonService.updatePokemon(selectedPokemon);
     }
 
     private void deletePokemon(final @NonNull Trainer trainer) {
-        val pokemons = PokemonService.getPokemonsByTrainer(trainer);
-        if (pokemons.isEmpty()){
-            System.out.println("Список покемонов пуст");
-            return;
-        }
+        val pokemons = pokemonService.getPokemonsByTrainer(trainer);
 
         OutputUtils.printPokemons(pokemons);
 
         val selectedIndex = InputUtils.promptForInt("Удалить покемона номер: ");
         if (selectedIndex > 0 && selectedIndex <= pokemons.size()) {
-            PokemonService.deletePokemon(pokemons.get(selectedIndex - 1));
+            pokemonService.deletePokemon(pokemons.get(selectedIndex - 1));
         } else {
             log.warn("Некорректный выбор при удалении покемона: {}", selectedIndex);
             System.out.println("Некорректный выбор.");

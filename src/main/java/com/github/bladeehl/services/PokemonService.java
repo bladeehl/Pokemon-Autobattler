@@ -7,15 +7,16 @@ import lombok.NonNull;
 import java.util.List;
 
 public class PokemonService {
-    private static final PokemonRepository pokemonRepository = new PokemonRepository();
+    private final PokemonRepository pokemonRepository = new PokemonRepository();
 
-    public static void saveFirePokemon(
+    public void saveFirePokemon(
         final Trainer trainer,
         final String name,
         final int health,
         final int damage,
         final int fireResistance,
         final int firePower) {
+
         pokemonRepository.savePokemon(
             FirePokemon.builder()
                 .name(name)
@@ -27,13 +28,14 @@ public class PokemonService {
                 .build());
     }
 
-    public static void saveWaterPokemon(
+    public void saveWaterPokemon(
         final Trainer trainer,
         final String name,
         final int health,
         final int damage,
         final int waterResistance,
         final int waterPower) {
+
         pokemonRepository.savePokemon(
             WaterPokemon.builder()
                 .name(name)
@@ -46,15 +48,15 @@ public class PokemonService {
     }
 
 
-    public static List<Pokemon> getPokemonsByTrainer(final @NonNull Trainer trainer) {
+    public List<Pokemon> getPokemonsByTrainer(final @NonNull Trainer trainer) {
         return pokemonRepository.getPokemonsByTrainer(trainer);
     }
 
-    public static void updatePokemon(final @NonNull Pokemon pokemon) {
+    public void updatePokemon(final @NonNull Pokemon pokemon) {
         pokemonRepository.updatePokemon(pokemon);
     }
 
-    public static void deletePokemon(final @NonNull Pokemon pokemon) {
+    public void deletePokemon(final @NonNull Pokemon pokemon) {
         pokemonRepository.deletePokemon(pokemon);
     }
 }

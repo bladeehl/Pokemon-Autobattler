@@ -3,13 +3,13 @@ package com.github.bladeehl.services;
 import com.github.bladeehl.model.FirePokemon;
 import com.github.bladeehl.model.Pokemon;
 import com.github.bladeehl.model.WaterPokemon;
+import com.github.bladeehl.exceptions.UnsupportedPokemonTypeException;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Slf4j
-
 public class BattleService {
     Pokemon firstPokemon;
     Pokemon secondPokemon;
@@ -42,7 +42,7 @@ public class BattleService {
         isFirstPlayersTurn = !isFirstPlayersTurn;
     }
 
-    public int attack(final Pokemon playablePokemon, final Pokemon opponentPokemon) {
+    public int attack(final @NonNull Pokemon playablePokemon, final @NonNull Pokemon opponentPokemon) {
         return playablePokemon.attack(opponentPokemon);
     }
 
@@ -63,22 +63,21 @@ public class BattleService {
             return waterPokemon.waveAttack(opponentPokemon);
         }
 
-        log.error("Попытка использовать спец. атаку с неподдерживаемым типом покемона");
-        throw new IllegalArgumentException("Неподдерживаемый тип покемона для спец. атаки");
+        throw new UnsupportedPokemonTypeException("Неподдерживаемый тип покемона для спец. атаки");
     }
 
     public void defensiveAbility(final Pokemon playablePokemon) {
         if (playablePokemon instanceof FirePokemon firePokemon) {
             firePokemon.fireThorns();
+            return;
         }
 
         if (playablePokemon instanceof WaterPokemon waterPokemon) {
             waterPokemon.waterHide();
+            return;
         }
 
-        log.error("Попытка использовать защитную способность с неподдерживаемым типом покемона");
-        throw new IllegalArgumentException("Неподдерживаемый тип покемона для защитной способноси");
-
+        throw new UnsupportedPokemonTypeException("Неподдерживаемый тип покемона для защитной способности");
     }
 
     public void evolve(final Pokemon playablePokemon) {

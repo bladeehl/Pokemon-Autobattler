@@ -2,6 +2,7 @@ package com.github.bladeehl.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.NonNull;
 
 import lombok.experimental.SuperBuilder;
 
@@ -10,23 +11,27 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @SuperBuilder
+
 public class WaterPokemon extends Pokemon {
     int waterResistance;
     int waterPower;
+
     public void waterHide() {
         setImmuneNextTurn(true);
     }
 
-    public int waveAttack(final Pokemon target) {
+    public int waveAttack(final @NonNull Pokemon target) {
         val hpBefore = target.getHealth();
         target.takeDamage(waterPower + 10);
+
         return hpBefore - target.getHealth();
     }
 
     @Override
-    public int attack(final Pokemon target) {
+    public int attack(final @NonNull Pokemon target) {
         val hpBefore = target.getHealth();
         target.takeDamage(getDamage());
+
         return hpBefore - getDamage();
     }
 
@@ -44,6 +49,7 @@ public class WaterPokemon extends Pokemon {
     public int ability() {
         val hpBefore =  getHealth();
         setHealth(getHealth() + waterPower);
+
         return getHealth() - hpBefore;
     }
 

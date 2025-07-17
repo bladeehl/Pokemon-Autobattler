@@ -1,37 +1,38 @@
 package com.github.bladeehl.utils;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import lombok.experimental.UtilityClass;
 
 import java.util.Scanner;
 
 @Slf4j
+@UtilityClass
 public class InputUtils {
-    private static final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
-    public static int promptForInt(String message) {
-        System.out.print(message);
-        return safeIntInput();
-    }
-
-    private static int safeIntInput() {
-        try {
-            return Integer.parseInt(scanner.next());
-        } catch (NumberFormatException e) {
-            log.warn("Ошибка ввода числа", e);
-            return -1;
+    public int promptForInt(final @NonNull String message) {
+        while (true) {
+            System.out.print(message);
+            try {
+                return Integer.parseInt(scanner.next());
+            } catch (NumberFormatException thrown) {
+                log.warn("Ошибка ввода числа, попробуйте ещё раз", thrown);
+                System.out.println("Ошибка: введите корректное целое число.");
+            }
         }
     }
 
-    public static String promptForString(String message) {
+    public String promptForString(final @NonNull String message) {
         System.out.print(message);
         return safeStringInput();
     }
 
-    private static String safeStringInput() {
+    private String safeStringInput() {
         try {
             return scanner.next();
-        } catch (Exception e) {
-            log.warn("Ошибка ввода строки", e);
+        } catch (Exception thrown) {
+            log.warn("Ошибка ввода строки", thrown);
             return "";
         }
     }

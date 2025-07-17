@@ -27,7 +27,7 @@ public class Trainer {
     @Builder.Default
     List<Pokemon> pokemons = new ArrayList<>();
 
-    public boolean canBattle(){
+    public boolean canBattle() {
         return pokemons.size() >= 2;
     }
 }

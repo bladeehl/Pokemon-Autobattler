@@ -2,6 +2,7 @@ package com.github.bladeehl.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.NonNull;
 
 import lombok.experimental.SuperBuilder;
 
@@ -14,9 +15,11 @@ import lombok.experimental.SuperBuilder;
 public class FirePokemon extends Pokemon {
     int fireResistance;
     int firePower;
-    public int fireBall(final Pokemon target) {
+
+    public int fireBall(@NonNull final Pokemon target) {
         val hpBefore = target.getHealth();
         target.takeDamage(firePower + 20);
+
         return hpBefore - target.getHealth();
     }
 
@@ -25,9 +28,10 @@ public class FirePokemon extends Pokemon {
     }
 
     @Override
-    public int attack(final Pokemon target) {
+    public int attack(@NonNull Pokemon target) {
         val hpBefore = target.getHealth();
         target.takeDamage(getDamage());
+
         return hpBefore - target.getHealth();
     }
 
