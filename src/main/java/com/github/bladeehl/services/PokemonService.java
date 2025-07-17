@@ -3,11 +3,15 @@ package com.github.bladeehl.services;
 import com.github.bladeehl.model.*;
 import com.github.bladeehl.repositories.PokemonRepository;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class PokemonService {
-    private final PokemonRepository pokemonRepository = new PokemonRepository();
+    private final PokemonRepository pokemonRepository;
 
     public void saveFirePokemon(
         final @NonNull Trainer trainer,

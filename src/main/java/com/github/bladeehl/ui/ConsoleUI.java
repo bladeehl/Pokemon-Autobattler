@@ -2,7 +2,6 @@ package com.github.bladeehl.ui;
 
 import com.github.bladeehl.exceptions.TrainerNotFoundException;
 import com.github.bladeehl.model.Trainer;
-import com.github.bladeehl.services.BattleService;
 import com.github.bladeehl.services.PokemonService;
 import com.github.bladeehl.utils.InputUtils;
 import com.github.bladeehl.services.TrainerService;
@@ -10,11 +9,16 @@ import com.github.bladeehl.utils.OutputUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.NonNull;
 import lombok.val;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 @Slf4j
 public class ConsoleUI {
-    final TrainerService trainerService = new TrainerService();
-    final PokemonService pokemonService = new PokemonService();
+    final TrainerService trainerService;
+    final PokemonService pokemonService;
+    final BattleUI battleUI;
 
     public void run() {
         while (true) {
@@ -111,7 +115,7 @@ public class ConsoleUI {
             val userChoice = InputUtils.promptForInt("Выбор: ");
 
             switch (userChoice) {
-                case 1 -> new BattleUI(pokemonService).startBattle(trainer);
+                case 1 -> battleUI.startBattle(trainer);
                 case 2 -> createPokemon(trainer);
                 case 3 -> updatePokemon(trainer);
                 case 4 -> deletePokemon(trainer);

@@ -9,15 +9,15 @@ import com.github.bladeehl.exceptions.UnsupportedPokemonTypeException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.NonNull;
 import lombok.val;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 @Slf4j
 public class BattleUI {
-    final BattleService battleService = new BattleService();
+    final BattleService battleService;
     final PokemonService pokemonService;
-
-    public BattleUI(PokemonService pokemonService) {
-        this.pokemonService = pokemonService;
-    }
 
     public void startBattle(final @NonNull Trainer trainer) {
         val pokemons = pokemonService.getPokemonsByTrainer(trainer);

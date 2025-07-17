@@ -6,8 +6,12 @@ import com.github.bladeehl.model.WaterPokemon;
 import com.github.bladeehl.exceptions.UnsupportedPokemonTypeException;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
+@Service
+@RequiredArgsConstructor
 @Getter
 @Slf4j
 public class BattleService {

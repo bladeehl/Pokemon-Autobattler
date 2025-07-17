@@ -4,9 +4,11 @@ import com.github.bladeehl.services.DatabaseHelper;
 import com.github.bladeehl.model.Pokemon;
 import com.github.bladeehl.model.Trainer;
 import lombok.val;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class PokemonRepository {
     public List<Pokemon> getPokemonsByTrainer(final Trainer trainer) {
         return DatabaseHelper.returnInTransaction(session -> {
