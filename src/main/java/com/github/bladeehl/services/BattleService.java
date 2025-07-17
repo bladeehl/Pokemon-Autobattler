@@ -3,20 +3,23 @@ package com.github.bladeehl.services;
 import com.github.bladeehl.model.FirePokemon;
 import com.github.bladeehl.model.Pokemon;
 import com.github.bladeehl.model.WaterPokemon;
+import com.github.bladeehl.exceptions.UnsupportedPokemonTypeException;
 import lombok.Getter;
-import lombok.val;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
+@Service
+@RequiredArgsConstructor
 @Getter
+@Slf4j
 public class BattleService {
     Pokemon firstPokemon;
     Pokemon secondPokemon;
     boolean isFirstPlayersTurn;
 
-    public boolean canBattle(final int numberOfPokemons) {
-        return numberOfPokemons >= 2;
-    }
-
-    public void startBattle(final Pokemon first, final Pokemon second) {
+    public void startBattle(final @NonNull Pokemon first, final @NonNull Pokemon second) {
         this.firstPokemon = first;
         this.secondPokemon = second;
         this.isFirstPlayersTurn = true;
@@ -43,49 +46,45 @@ public class BattleService {
         isFirstPlayersTurn = !isFirstPlayersTurn;
     }
 
-    public int attack(final Pokemon playablePokemon, final Pokemon opponentPokemon) {
-        val hpBefore = opponentPokemon.getHealth();
-        playablePokemon.attack(opponentPokemon);
-        return hpBefore - opponentPokemon.getHealth();
+    public int attack(final @NonNull Pokemon playablePokemon, final @NonNull Pokemon opponentPokemon) {
+        return playablePokemon.attack(opponentPokemon);
     }
 
-    public void defend(final Pokemon playablePokemon) {
+    public void defend(final @NonNull Pokemon playablePokemon) {
         playablePokemon.defend();
     }
 
-    public int useAbility(final Pokemon playablePokemon) {
-        val hpBefore = playablePokemon.getHealth();
-        playablePokemon.ability();
-        return playablePokemon.getHealth() - hpBefore;
+    public int useAbility(final @NonNull Pokemon playablePokemon) {
+        return playablePokemon.ability();
     }
 
-    public int specialAttack(final Pokemon playablePokemon, final Pokemon opponentPokemon) {
+    public int specialAttack(final @NonNull Pokemon playablePokemon, final @NonNull Pokemon opponentPokemon) {
         if (playablePokemon instanceof FirePokemon firePokemon) {
-            val hpBefore = opponentPokemon.getHealth();
-            firePokemon.fireBall(opponentPokemon);
-            return hpBefore - opponentPokemon.getHealth();
+            return firePokemon.fireBall(opponentPokemon);
         }
 
         if (playablePokemon instanceof WaterPokemon waterPokemon) {
-            val hpBefore = opponentPokemon.getHealth();
-            waterPokemon.waveAttack(opponentPokemon);
-            return hpBefore - opponentPokemon.getHealth();
+            return waterPokemon.waveAttack(opponentPokemon);
         }
 
-        return 0;
+        throw new UnsupportedPokemonTypeException("Неподдерживаемый тип покемона для спец. атаки");
     }
 
-    public void defensiveAbility(final Pokemon playablePokemon) {
+    public void defensiveAbility(final @NonNull Pokemon playablePokemon) {
         if (playablePokemon instanceof FirePokemon firePokemon) {
             firePokemon.fireThorns();
+            return;
         }
 
         if (playablePokemon instanceof WaterPokemon waterPokemon) {
             waterPokemon.waterHide();
+            return;
         }
+
+        throw new UnsupportedPokemonTypeException("Неподдерживаемый тип покемона для защитной способности");
     }
 
-    public void evolve(final Pokemon playablePokemon) {
+    public void evolve(final @NonNull Pokemon playablePokemon) {
         playablePokemon.evolve();
     }
 
