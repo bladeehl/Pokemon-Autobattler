@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 @Component
 @RequiredArgsConstructor
 public class OutputUtils {
-    private final IOContext io;
+    final IOContext io;
 
     public void printTrainers(final List<Trainer> trainers) {
         IntStream.range(0, trainers.size())

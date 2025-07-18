@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TrainerService {
-    private final TrainerRepository trainerRepository;
+    final TrainerRepository trainerRepository;
 
     @Transactional
     public Trainer createTrainer(final String name) {

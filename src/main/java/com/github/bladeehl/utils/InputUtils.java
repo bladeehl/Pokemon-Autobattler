@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class InputUtils {
-    private final IOContext io;
+    final IOContext io;
 
     public int promptForInt(final String message) {
         while (true) {

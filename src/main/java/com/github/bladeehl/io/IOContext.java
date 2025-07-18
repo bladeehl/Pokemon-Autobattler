@@ -9,8 +9,8 @@ import java.util.Scanner;
 @RequiredArgsConstructor
 @Component
 public class IOContext {
-    private final Scanner in;
-    private final PrintStream out;
+    final Scanner in;
+    final PrintStream out;
 
     public IOContext() {
         this.in = new Scanner(System.in);
