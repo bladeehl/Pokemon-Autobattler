@@ -12,8 +12,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class FirePokemon extends Pokemon {
-    int fireResistance;
-    int firePower;
+    Integer fireResistance;
+    Integer firePower;
 
     public int fireBall(final @NonNull Pokemon target) {
         val hpBefore = target.getHealth();
@@ -53,6 +53,10 @@ public class FirePokemon extends Pokemon {
     @Override
     public String toString() {
         return "Fire  | %-10s | HP:%-4d | DMG:%-3d | FireRes:%-3d | FirePwr:%-3d"
-            .formatted(getName(), getHealth(), getDamage(), fireResistance, firePower);
+            .formatted(getName(),
+                getHealth(),
+                getDamage(),
+                fireResistance,
+                firePower);
     }
 }

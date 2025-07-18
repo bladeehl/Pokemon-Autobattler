@@ -4,7 +4,9 @@ import com.github.bladeehl.model.*;
 import com.github.bladeehl.repositories.PokemonRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ import java.util.List;
 public class PokemonService {
     private final PokemonRepository pokemonRepository;
 
+    @Transactional
     public void saveFirePokemon(
         final @NonNull Trainer trainer,
         final @NonNull String name,
@@ -21,17 +24,19 @@ public class PokemonService {
         final int fireResistance,
         final int firePower) {
 
-        pokemonRepository.savePokemon(
-            FirePokemon.builder()
-                .name(name)
-                .health(health)
-                .damage(damage)
-                .fireResistance(Math.max(0, fireResistance))
-                .firePower(Math.max(0, firePower))
-                .trainer(trainer)
-                .build());
+        val pokemon = FirePokemon.builder()
+            .name(name)
+            .health(health)
+            .damage(damage)
+            .fireResistance(Math.max(0, fireResistance))
+            .firePower(Math.max(0, firePower))
+            .trainer(trainer)
+            .build();
+
+        pokemonRepository.save(pokemon);
     }
 
+    @Transactional
     public void saveWaterPokemon(
         final @NonNull Trainer trainer,
         final @NonNull String name,
@@ -40,27 +45,30 @@ public class PokemonService {
         final int waterResistance,
         final int waterPower) {
 
-        pokemonRepository.savePokemon(
-            WaterPokemon.builder()
-                .name(name)
-                .health(health)
-                .damage(damage)
-                .waterResistance(Math.max(0, waterResistance))
-                .waterPower(Math.max(0, waterPower))
-                .trainer(trainer)
-                .build());
+        val pokemon = WaterPokemon.builder()
+            .name(name)
+            .health(health)
+            .damage(damage)
+            .waterResistance(Math.max(0, waterResistance))
+            .waterPower(Math.max(0, waterPower))
+            .trainer(trainer)
+            .build();
+
+        pokemonRepository.save(pokemon);
     }
 
-
+    @Transactional(readOnly = true)
     public List<Pokemon> getPokemonsByTrainer(final @NonNull Trainer trainer) {
-        return pokemonRepository.getPokemonsByTrainer(trainer);
+        return pokemonRepository.findByTrainer(trainer);
     }
 
+    @Transactional
     public void updatePokemon(final @NonNull Pokemon pokemon) {
-        pokemonRepository.updatePokemon(pokemon);
+        pokemonRepository.save(pokemon);
     }
 
+    @Transactional
     public void deletePokemon(final @NonNull Pokemon pokemon) {
-        pokemonRepository.deletePokemon(pokemon);
+        pokemonRepository.delete(pokemon);
     }
 }

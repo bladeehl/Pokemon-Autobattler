@@ -18,8 +18,8 @@ public abstract class Pokemon {
     Long id;
 
     String name;
-    int health;
-    int damage;
+    Integer health;
+    Integer damage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id")
