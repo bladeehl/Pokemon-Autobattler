@@ -24,7 +24,7 @@ public class BattleUI {
     final OutputUtils outputUtils;
 
     public void startBattle(final @NonNull Trainer trainer) {
-        val pokemons = pokemonService.getPokemonsByTrainer(trainer);
+        val pokemons = pokemonService.getByTrainer(trainer);
 
         if (!trainer.canBattle()) {
             log.warn("Меньше двух покемонов");

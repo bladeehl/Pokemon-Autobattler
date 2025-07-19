@@ -3,6 +3,7 @@ package com.github.bladeehl.services;
 import com.github.bladeehl.exceptions.TrainerNotFoundException;
 import com.github.bladeehl.model.Trainer;
 import com.github.bladeehl.repositories.TrainerRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -18,18 +19,13 @@ public class TrainerService {
     final TrainerRepository trainerRepository;
 
     @Transactional
-    public Trainer createTrainer(final String name) {
+    public Trainer createTrainer(final @NonNull String name) {
         val trainer = Trainer.builder()
             .name(name)
             .build();
 
         trainerRepository.save(trainer);
         return trainer;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Trainer> getAllTrainers() {
-        return trainerRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -41,5 +37,30 @@ public class TrainerService {
         }
 
         return trainers.get(index - 1);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Trainer> getAll() {
+        return trainerRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Trainer getById(Long id) {
+        return trainerRepository.findById(id)
+            .orElseThrow(() -> new TrainerNotFoundException("Тренер с id " + id + " не найден"));
+    }
+
+    @Transactional
+    public Trainer update(final @NonNull Trainer trainer) {
+        return trainerRepository.save(trainer);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        if (!trainerRepository.existsById(id)) {
+            throw new TrainerNotFoundException("Невозможно удалить: тренер с id " + id + " не найден");
+        }
+
+        trainerRepository.deleteById(id);
     }
 }

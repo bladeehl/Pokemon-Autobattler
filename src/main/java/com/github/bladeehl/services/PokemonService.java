@@ -1,5 +1,6 @@
 package com.github.bladeehl.services;
 
+import com.github.bladeehl.exceptions.PokemonNotFoundException;
 import com.github.bladeehl.model.*;
 import com.github.bladeehl.repositories.PokemonRepository;
 import lombok.NonNull;
@@ -16,7 +17,7 @@ public class PokemonService {
     final PokemonRepository pokemonRepository;
 
     @Transactional
-    public void saveFirePokemon(
+    public FirePokemon saveFirePokemon(
         final @NonNull Trainer trainer,
         final @NonNull String name,
         final int health,
@@ -33,11 +34,11 @@ public class PokemonService {
             .trainer(trainer)
             .build();
 
-        pokemonRepository.save(pokemon);
+        return pokemonRepository.save(pokemon);
     }
 
     @Transactional
-    public void saveWaterPokemon(
+    public WaterPokemon saveWaterPokemon(
         final @NonNull Trainer trainer,
         final @NonNull String name,
         final int health,
@@ -54,12 +55,7 @@ public class PokemonService {
             .trainer(trainer)
             .build();
 
-        pokemonRepository.save(pokemon);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Pokemon> getPokemonsByTrainer(final @NonNull Trainer trainer) {
-        return pokemonRepository.findByTrainer(trainer);
+        return pokemonRepository.save(pokemon);
     }
 
     @Transactional
@@ -70,5 +66,25 @@ public class PokemonService {
     @Transactional
     public void deletePokemon(final @NonNull Pokemon pokemon) {
         pokemonRepository.delete(pokemon);
+    }
+
+    @Transactional(readOnly = true)
+    public Pokemon getById(Long id) {
+        return pokemonRepository.findById(id)
+            .orElseThrow(() -> new PokemonNotFoundException("Покемон с id " + id + " не найден"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Pokemon> getByTrainer(final @NonNull Trainer trainer) {
+        return pokemonRepository.findByTrainer(trainer);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        if (!pokemonRepository.existsById(id)) {
+            throw new PokemonNotFoundException("Покемон с id " + id + " не найден для удаления");
+        }
+
+        pokemonRepository.deleteById(id);
     }
 }

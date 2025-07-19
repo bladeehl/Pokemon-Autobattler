@@ -1,5 +1,6 @@
 package com.github.bladeehl.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public abstract class Pokemon {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id")
+    @JsonIgnore
     Trainer trainer;
 
     @Transient
@@ -42,7 +44,7 @@ public abstract class Pokemon {
 
     public abstract int ability();
 
-    public abstract int specialAttack(@NonNull Pokemon target);
+    public abstract int specialAttack(final @NonNull Pokemon target);
 
     public abstract void defensiveAbility();
 

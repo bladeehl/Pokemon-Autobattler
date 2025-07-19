@@ -81,7 +81,7 @@ public class ConsoleUI {
     }
 
     private Trainer handleSelectTrainer() {
-        val allTrainers = trainerService.getAllTrainers();
+        val allTrainers = trainerService.getAll();
 
         if (allTrainers.isEmpty()) {
             io.out().println("Тренеров нет.");
@@ -173,13 +173,13 @@ public class ConsoleUI {
     }
 
     private void showPokemons(final @NonNull Trainer trainer) {
-        val pokemons = pokemonService.getPokemonsByTrainer(trainer);
+        val pokemons = pokemonService.getByTrainer(trainer);
 
         outputUtils.printPokemons(pokemons);
     }
 
     private void updatePokemon(final @NonNull Trainer trainer) {
-        val pokemons = pokemonService.getPokemonsByTrainer(trainer);
+        val pokemons = pokemonService.getByTrainer(trainer);
 
         outputUtils.printPokemons(pokemons);
 
@@ -214,7 +214,7 @@ public class ConsoleUI {
     }
 
     private void deletePokemon(final @NonNull Trainer trainer) {
-        val pokemons = pokemonService.getPokemonsByTrainer(trainer);
+        val pokemons = pokemonService.getByTrainer(trainer);
 
         outputUtils.printPokemons(pokemons);
 
