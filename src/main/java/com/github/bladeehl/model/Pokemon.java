@@ -42,6 +42,10 @@ public abstract class Pokemon {
 
     public abstract int ability();
 
+    public abstract int specialAttack(@NonNull Pokemon target);
+
+    public abstract void defensiveAbility();
+
     public void takeDamage(final int damage) {
         if (immuneNextTurn) {
             immuneNextTurn = false;

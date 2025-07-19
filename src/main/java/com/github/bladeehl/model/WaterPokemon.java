@@ -15,15 +15,17 @@ public class WaterPokemon extends Pokemon {
     Integer waterResistance;
     Integer waterPower;
 
-    public void waterHide() {
-        setImmuneNextTurn(true);
-    }
-
-    public int waveAttack(final @NonNull Pokemon target) {
+    @Override
+    public int specialAttack(final @NonNull Pokemon target) {
         val hpBefore = target.getHealth();
         target.takeDamage(waterPower + 10);
 
         return hpBefore - target.getHealth();
+    }
+
+    @Override
+    public void defensiveAbility() {
+        setImmuneNextTurn(true);
     }
 
     @Override

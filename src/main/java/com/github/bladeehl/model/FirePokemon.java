@@ -15,14 +15,16 @@ public class FirePokemon extends Pokemon {
     Integer fireResistance;
     Integer firePower;
 
-    public int fireBall(final @NonNull Pokemon target) {
+    @Override
+    public int specialAttack(final @NonNull Pokemon target) {
         val hpBefore = target.getHealth();
         target.takeDamage(firePower + 20);
 
         return hpBefore - target.getHealth();
     }
 
-    public void fireThorns() {
+    @Override
+    public void defensiveAbility() {
         fireResistance += 20;
     }
 
