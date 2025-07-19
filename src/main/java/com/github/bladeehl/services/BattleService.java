@@ -1,9 +1,6 @@
 package com.github.bladeehl.services;
 
-import com.github.bladeehl.model.FirePokemon;
 import com.github.bladeehl.model.Pokemon;
-import com.github.bladeehl.model.WaterPokemon;
-import com.github.bladeehl.exceptions.UnsupportedPokemonTypeException;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -58,30 +55,12 @@ public class BattleService {
         return playablePokemon.ability();
     }
 
-    public int specialAttack(final @NonNull Pokemon playablePokemon, final @NonNull Pokemon opponentPokemon) {
-        if (playablePokemon instanceof FirePokemon firePokemon) {
-            return firePokemon.fireBall(opponentPokemon);
-        }
-
-        if (playablePokemon instanceof WaterPokemon waterPokemon) {
-            return waterPokemon.waveAttack(opponentPokemon);
-        }
-
-        throw new UnsupportedPokemonTypeException("Неподдерживаемый тип покемона для спец. атаки");
+    public int specialAttack(final @NonNull Pokemon playablePokemon, @NonNull Pokemon opponentPokemon) {
+        return playablePokemon.specialAttack(opponentPokemon);
     }
 
     public void defensiveAbility(final @NonNull Pokemon playablePokemon) {
-        if (playablePokemon instanceof FirePokemon firePokemon) {
-            firePokemon.fireThorns();
-            return;
-        }
-
-        if (playablePokemon instanceof WaterPokemon waterPokemon) {
-            waterPokemon.waterHide();
-            return;
-        }
-
-        throw new UnsupportedPokemonTypeException("Неподдерживаемый тип покемона для защитной способности");
+        playablePokemon.defensiveAbility();
     }
 
     public void evolve(final @NonNull Pokemon playablePokemon) {

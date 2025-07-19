@@ -18,8 +18,8 @@ public abstract class Pokemon {
     Long id;
 
     String name;
-    int health;
-    int damage;
+    Integer health;
+    Integer damage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id")
@@ -41,6 +41,10 @@ public abstract class Pokemon {
     public abstract void evolve();
 
     public abstract int ability();
+
+    public abstract int specialAttack(@NonNull Pokemon target);
+
+    public abstract void defensiveAbility();
 
     public void takeDamage(final int damage) {
         if (immuneNextTurn) {

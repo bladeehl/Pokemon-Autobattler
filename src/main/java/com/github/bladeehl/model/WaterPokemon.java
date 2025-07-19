@@ -12,18 +12,20 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class WaterPokemon extends Pokemon {
-    int waterResistance;
-    int waterPower;
+    Integer waterResistance;
+    Integer waterPower;
 
-    public void waterHide() {
-        setImmuneNextTurn(true);
-    }
-
-    public int waveAttack(final @NonNull Pokemon target) {
+    @Override
+    public int specialAttack(final @NonNull Pokemon target) {
         val hpBefore = target.getHealth();
         target.takeDamage(waterPower + 10);
 
         return hpBefore - target.getHealth();
+    }
+
+    @Override
+    public void defensiveAbility() {
+        setImmuneNextTurn(true);
     }
 
     @Override
@@ -55,6 +57,10 @@ public class WaterPokemon extends Pokemon {
     @Override
     public String toString() {
         return "Water | %-10s | HP:%-4d | DMG:%-3d | WaterRes:%-3d | WaterPwr:%-3d"
-            .formatted(getName(), getHealth(), getDamage(), waterResistance, waterPower);
+            .formatted(getName(),
+                getHealth(),
+                getDamage(),
+                waterResistance,
+                waterPower);
     }
 }

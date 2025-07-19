@@ -1,5 +1,6 @@
 package com.github.bladeehl.ui;
 
+import com.github.bladeehl.io.IOContext;
 import com.github.bladeehl.model.Trainer;
 import com.github.bladeehl.services.PokemonService;
 import com.github.bladeehl.services.BattleService;
@@ -18,21 +19,24 @@ import org.springframework.stereotype.Component;
 public class BattleUI {
     final BattleService battleService;
     final PokemonService pokemonService;
+    final IOContext io;
+    final InputUtils inputUtils;
+    final OutputUtils outputUtils;
 
     public void startBattle(final @NonNull Trainer trainer) {
         val pokemons = pokemonService.getPokemonsByTrainer(trainer);
 
         if (!trainer.canBattle()) {
             log.warn("Меньше двух покемонов");
-            System.out.println("Нужно минимум 2 покемона для боя.");
+            io.out().println("Нужно минимум 2 покемона для боя.");
             return;
         }
 
-        System.out.println("Выберите двух покемонов для битвы:");
-        OutputUtils.printPokemons(pokemons);
+        io.out().println("Выберите двух покемонов для битвы:");
+        outputUtils.printPokemons(pokemons);
 
-        val firstIndex = InputUtils.promptForInt("Первый покемон: ") - 1;
-        val secondIndex = InputUtils.promptForInt("Второй покемон: ") - 1;
+        val firstIndex = inputUtils.promptForInt("Первый покемон: ") - 1;
+        val secondIndex = inputUtils.promptForInt("Второй покемон: ") - 1;
 
         if (firstIndex == secondIndex
             || firstIndex < 0
@@ -45,14 +49,14 @@ public class BattleUI {
                 firstIndex + 1,
                 secondIndex + 1);
 
-            System.out.println("Некорректный выбор покемонов. Бой отменён.");
+            io.out().println("Некорректный выбор покемонов. Бой отменён.");
             return;
         }
 
         val firstPokemon = pokemons.get(firstIndex);
         val secondPokemon = pokemons.get(secondIndex);
 
-        System.out.printf("""
+        io.out().printf("""
             
             ⚔️ Битва начинается!
             %s VS %s
@@ -67,7 +71,7 @@ public class BattleUI {
             val playablePokemon = battleService.getCurrentPlayablePokemon();
             val opponentPokemon = battleService.getCurrentOpponentPokemon();
 
-            System.out.printf("""
+            io.out().printf("""
                 🎮 Ход: %s
                 1. Атаковать
                 2. Защититься
@@ -77,12 +81,12 @@ public class BattleUI {
                 6. Эволюция
                 """, playablePokemon.getName());
 
-            val choice = InputUtils.promptForInt("Выбор: ");
+            val choice = inputUtils.promptForInt("Выбор: ");
 
             switch (choice) {
                 case 1 -> {
                     val dmg = battleService.attack(playablePokemon, opponentPokemon);
-                    System.out.printf(
+                    io.out().printf(
                         "💥 %s атаковал %s на %d урона%n",
                         playablePokemon.getName(),
                         opponentPokemon.getName(),
@@ -90,41 +94,41 @@ public class BattleUI {
                 }
                 case 2 -> {
                     battleService.defend(playablePokemon);
-                    System.out.printf("🛡️ %s активировал защиту%n",
+                    io.out().printf("🛡️ %s активировал защиту%n",
                         playablePokemon.getName());
                 }
                 case 3 -> {
                     val gain = battleService.useAbility(playablePokemon);
-                    System.out.printf("✨ %s использовал способность (+%d HP)%n",
+                    io.out().printf("✨ %s использовал способность (+%d HP)%n",
                         playablePokemon.getName(),
                         gain);
                 }
                 case 4 -> {
                     try {
                         val dmg = battleService.specialAttack(playablePokemon, opponentPokemon);
-                        System.out.printf("🔥 Спец. атака нанесла %d урона%n", dmg);
+                        io.out().printf("🔥 Спец. атака нанесла %d урона%n", dmg);
                     } catch (UnsupportedPokemonTypeException thrown) {
                         log.error("Ошибка спец. атаки", thrown);
-                        System.out.println("Ошибка: " + thrown.getMessage());
+                        io.out().println("Ошибка: " + thrown.getMessage());
                     }
                 }
                 case 5 -> {
                     try {
                         battleService.defensiveAbility(playablePokemon);
-                        System.out.println("🛡️ Защитная способность активирована.");
+                        io.out().println("🛡️ Защитная способность активирована.");
                     } catch (UnsupportedPokemonTypeException thrown) {
                         log.error("Ошибка защитной способности", thrown);
-                        System.out.println("Ошибка: " + thrown.getMessage());
+                        io.out().println("Ошибка: " + thrown.getMessage());
                     }
                 }
                 case 6 -> {
                     battleService.evolve(playablePokemon);
-                    System.out.println("🆙 Эволюция завершена!");
+                    io.out().println("🆙 Эволюция завершена!");
                 }
-                default -> System.out.println("⛔ Пропуск хода из-за неверного ввода.");
+                default -> io.out().println("⛔ Пропуск хода из-за неверного ввода.");
             }
 
-            System.out.printf(
+            io.out().printf(
                 "📊 %s (HP: %d) vs %s (HP: %d)%n%n",
                 firstPokemon.getName(),
                 firstPokemon.getHealth(),
@@ -136,6 +140,6 @@ public class BattleUI {
 
         val winner = battleService.getWinner();
 
-        System.out.printf("🏆 Победитель: %s!%n", winner.getName());
+        io.out().printf("🏆 Победитель: %s!%n", winner.getName());
     }
 }
