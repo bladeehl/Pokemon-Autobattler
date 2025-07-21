@@ -5,7 +5,7 @@ import com.github.bladeehl.model.*;
 import com.github.bladeehl.repositories.PokemonRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,31 +13,28 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true)
 public class PokemonService {
-    final PokemonRepository pokemonRepository;
+    PokemonRepository pokemonRepository;
 
-    @Transactional
     public FirePokemon saveFirePokemon(
-        final @NonNull Trainer trainer,
-        final @NonNull String name,
+        @NonNull final Trainer trainer,
+        @NonNull final String name,
         final int health,
         final int damage,
         final int fireResistance,
         final int firePower) {
-
-        val pokemon = FirePokemon.builder()
+        return pokemonRepository.save(
+            FirePokemon.builder()
             .name(name)
             .health(health)
             .damage(damage)
             .fireResistance(Math.max(0, fireResistance))
             .firePower(Math.max(0, firePower))
             .trainer(trainer)
-            .build();
-
-        return pokemonRepository.save(pokemon);
+            .build());
     }
 
-    @Transactional
     public WaterPokemon saveWaterPokemon(
         final @NonNull Trainer trainer,
         final @NonNull String name,
@@ -45,17 +42,15 @@ public class PokemonService {
         final int damage,
         final int waterResistance,
         final int waterPower) {
-
-        val pokemon = WaterPokemon.builder()
+        return pokemonRepository.save(
+            WaterPokemon.builder()
             .name(name)
             .health(health)
             .damage(damage)
             .waterResistance(Math.max(0, waterResistance))
             .waterPower(Math.max(0, waterPower))
             .trainer(trainer)
-            .build();
-
-        return pokemonRepository.save(pokemon);
+            .build());
     }
 
     @Transactional
@@ -71,7 +66,7 @@ public class PokemonService {
     @Transactional(readOnly = true)
     public Pokemon getById(Long id) {
         return pokemonRepository.findById(id)
-            .orElseThrow(() -> new PokemonNotFoundException("Покемон с id " + id + " не найден"));
+            .orElseThrow(() -> new PokemonNotFoundException("Покемон с id %d не найден".formatted(id)));
     }
 
     @Transactional(readOnly = true)
@@ -82,7 +77,7 @@ public class PokemonService {
     @Transactional
     public void delete(Long id) {
         if (!pokemonRepository.existsById(id)) {
-            throw new PokemonNotFoundException("Покемон с id " + id + " не найден для удаления");
+            throw new PokemonNotFoundException("Покемон с id %d не найден для удаления".formatted(id));
         }
 
         pokemonRepository.deleteById(id);

@@ -6,6 +6,8 @@ import lombok.*;
 
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type")
@@ -13,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class Pokemon {
+public abstract class Pokemon implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

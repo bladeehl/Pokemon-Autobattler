@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/*
-* TODO: накатать исключения для всего, что может
-*  произойти в контроллерах
- */
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     record ErrorResponse(String message, String details) {}
@@ -22,28 +17,28 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EqualPokemonsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleEqualPokemonsException(
-        final @NonNull EqualPokemonsException thrown) {
+        @NonNull final EqualPokemonsException thrown) {
         return new ErrorResponse("Bad Request", thrown.getMessage());
     }
 
     @ExceptionHandler(BattleEndedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBattleEndedException(
-        final @NonNull BattleEndedException thrown) {
+        @NonNull final BattleEndedException thrown) {
         return new ErrorResponse("Bad Request", thrown.getMessage());
     }
 
     @ExceptionHandler(BattleNotEndedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBattleNotEndedException(
-        final @NonNull BattleNotEndedException thrown) {
+        @NonNull final BattleNotEndedException thrown) {
         return new ErrorResponse("Bad Request", thrown.getMessage());
     }
 
     @ExceptionHandler(UnsupportedPokemonTypeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnsupportedPokemonTypeException(
-        final @NonNull UnsupportedPokemonTypeException thrown) {
+        @NonNull final UnsupportedPokemonTypeException thrown) {
         return new ErrorResponse("Bad Request", thrown.getMessage());
     }
 }

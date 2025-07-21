@@ -5,6 +5,7 @@ import com.github.bladeehl.model.Trainer;
 import com.github.bladeehl.repositories.TrainerRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -12,20 +13,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true)
+@Slf4j
 public class TrainerService {
-    final TrainerRepository trainerRepository;
+    TrainerRepository trainerRepository;
 
     @Transactional
-    public Trainer createTrainer(final @NonNull String name) {
-        val trainer = Trainer.builder()
+    public Trainer createTrainer(@NonNull final String name) {
+        return trainerRepository.save(
+            Trainer.builder()
             .name(name)
-            .build();
-
-        trainerRepository.save(trainer);
-        return trainer;
+            .build());
     }
 
     @Transactional(readOnly = true)
@@ -33,7 +33,7 @@ public class TrainerService {
         val trainers = trainerRepository.findAll();
 
         if (index < 1 || index > trainers.size()) {
-            throw new TrainerNotFoundException("Некорректный индекс тренера: " + index);
+            throw new TrainerNotFoundException("Некорректный индекс тренера: %d".formatted(index));
         }
 
         return trainers.get(index - 1);
@@ -47,18 +47,18 @@ public class TrainerService {
     @Transactional(readOnly = true)
     public Trainer getById(Long id) {
         return trainerRepository.findById(id)
-            .orElseThrow(() -> new TrainerNotFoundException("Тренер с id " + id + " не найден"));
+            .orElseThrow(() -> new TrainerNotFoundException("Тренер с id %d не найден".formatted(id)));
     }
 
     @Transactional
-    public Trainer update(final @NonNull Trainer trainer) {
+    public Trainer update(@NonNull final Trainer trainer) {
         return trainerRepository.save(trainer);
     }
 
     @Transactional
     public void delete(Long id) {
         if (!trainerRepository.existsById(id)) {
-            throw new TrainerNotFoundException("Невозможно удалить: тренер с id " + id + " не найден");
+            throw new TrainerNotFoundException("Невозможно удалить: тренер с id %d не найден".formatted(id));
         }
 
         trainerRepository.deleteById(id);

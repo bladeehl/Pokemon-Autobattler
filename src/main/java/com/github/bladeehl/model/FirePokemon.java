@@ -6,6 +6,7 @@ import lombok.NonNull;
 
 import lombok.experimental.SuperBuilder;
 
+
 @Entity
 @DiscriminatorValue("Fire")
 @Data
@@ -16,7 +17,7 @@ public class FirePokemon extends Pokemon {
     Integer firePower;
 
     @Override
-    public int specialAttack(final @NonNull Pokemon target) {
+    public int specialAttack(@NonNull final Pokemon target) {
         val hpBefore = target.getHealth();
         target.takeDamage(firePower + 20);
 
@@ -29,7 +30,7 @@ public class FirePokemon extends Pokemon {
     }
 
     @Override
-    public int attack(final @NonNull Pokemon target) {
+    public int attack(@NonNull final Pokemon target) {
         val hpBefore = target.getHealth();
         target.takeDamage(getDamage());
 

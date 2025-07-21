@@ -16,7 +16,19 @@ spring:
                 use_sql_comments: false
         open-in-view: false
 
+    main:
+        banner-mode: off
+
+springdoc:
+    api-docs:
+        path: /v3/api-docs
+        enabled: true
+    swagger-ui:
+        path: /swagger-ui.html
+        enabled: true
+    packagesToScan: com.github.bladeehl.api
+
 logging:
-    level:
-        org.hibernate.SQL: off
-        org.hibernate.type.descriptor.sql.BasicBinder: off
+    config: classpath:logback-spring.xml
+    pattern:
+        console: none

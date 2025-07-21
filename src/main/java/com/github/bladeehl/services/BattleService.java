@@ -16,7 +16,8 @@ public class BattleService {
     Pokemon secondPokemon;
     boolean isFirstPlayersTurn;
 
-    public void startBattle(final @NonNull Pokemon first, final @NonNull Pokemon second) {
+    public void startBattle(@NonNull final Pokemon first,
+                            @NonNull final Pokemon second) {
         this.firstPokemon = first;
         this.secondPokemon = second;
         this.isFirstPlayersTurn = true;
@@ -43,27 +44,29 @@ public class BattleService {
         isFirstPlayersTurn = !isFirstPlayersTurn;
     }
 
-    public int attack(final @NonNull Pokemon playablePokemon, final @NonNull Pokemon opponentPokemon) {
+    public int attack(@NonNull final Pokemon playablePokemon,
+                      @NonNull final Pokemon opponentPokemon) {
         return playablePokemon.attack(opponentPokemon);
     }
 
-    public void defend(final @NonNull Pokemon playablePokemon) {
+    public void defend(@NonNull final Pokemon playablePokemon) {
         playablePokemon.defend();
     }
 
-    public int useAbility(final @NonNull Pokemon playablePokemon) {
+    public int useAbility(@NonNull final Pokemon playablePokemon) {
         return playablePokemon.ability();
     }
 
-    public int specialAttack(final @NonNull Pokemon playablePokemon, @NonNull Pokemon opponentPokemon) {
+    public int specialAttack(@NonNull final Pokemon playablePokemon,
+                             @NonNull final Pokemon opponentPokemon) {
         return playablePokemon.specialAttack(opponentPokemon);
     }
 
-    public void defensiveAbility(final @NonNull Pokemon playablePokemon) {
+    public void defensiveAbility(@NonNull final Pokemon playablePokemon) {
         playablePokemon.defensiveAbility();
     }
 
-    public void evolve(final @NonNull Pokemon playablePokemon) {
+    public void evolve(@NonNull final Pokemon playablePokemon) {
         playablePokemon.evolve();
     }
 
