@@ -1,15 +1,19 @@
 package com.github.bladeehl.api;
 
+import com.github.bladeehl.model.ConsoleHistory;
 import com.github.bladeehl.services.ConsoleWebService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/console")
@@ -40,5 +44,31 @@ public class WebController {
     })
     public String sendConsoleInput(@NonNull @RequestBody final String input) {
         return consoleWebService.processInput(input);
+    }
+
+    @GetMapping("/history")
+    @Operation(summary = "Получить всю историю",
+        description = "Возвращает все записи истории консоли")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "История получена"),
+        @ApiResponse(responseCode = "500", description = "Ошибка сервера")
+    })
+
+    public List<ConsoleHistory> getFullHistory() {
+        return consoleWebService.getHistorySince(null);
+    }
+    @GetMapping("/history/since")
+    @Operation(summary = "Получить историю с определенного ID",
+        description = "Возвращает записи истории, начиная с указанного ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "История получена"),
+        @ApiResponse(responseCode = "400", description = "Неверный параметр"),
+        @ApiResponse(responseCode = "500", description = "Ошибка сервера")
+    })
+
+    public List<ConsoleHistory> getHistorySince(
+        @Parameter(description = "ID записи, начиная с которой нужно вернуть историю")
+        @RequestParam @NonNull final Long lastEntryId) {
+        return consoleWebService.getHistorySince(lastEntryId);
     }
 }

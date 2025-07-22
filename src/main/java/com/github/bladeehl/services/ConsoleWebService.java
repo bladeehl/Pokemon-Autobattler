@@ -3,11 +3,16 @@ package com.github.bladeehl.services;
 import com.github.bladeehl.exceptions.TrainerNotFoundException;
 import com.github.bladeehl.exceptions.UnsupportedPokemonTypeException;
 import com.github.bladeehl.io.WebIO;
+import com.github.bladeehl.model.ConsoleHistory;
+import com.github.bladeehl.repositories.ConsoleHistoryRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +23,7 @@ public class ConsoleWebService {
     BattleService battleService;
     WebIO webIO;
     ConsoleSessionState sessionState;
+    ConsoleHistoryRepository historyRepository;
 
     public String getCurrentOutput() {
         val output = new StringBuilder();
@@ -156,6 +162,10 @@ public class ConsoleWebService {
 
     public String processInput(@NonNull final String input) {
         val output = new StringBuilder();
+        ConsoleHistory historyEntry = ConsoleHistory.builder()
+            .input(input)
+            .timestamp(Instant.now())
+            .build();
 
         try {
             switch (sessionState.getInputType()) {
@@ -541,7 +551,14 @@ public class ConsoleWebService {
         } catch (Exception thrown) {
             output.append(webIO.getErrorMessage(thrown.getMessage()));
         }
+        historyEntry.setOutput(output.toString());
+        historyRepository.save(historyEntry);
 
-        return output.toString();
+        return output.toString() + "\n[Entry ID: " + historyEntry.getId() + "]";
     }
+
+    public List<ConsoleHistory> getHistorySince(@NonNull final Long lastEntryId) {
+        return historyRepository.findByIdGreaterThanOrderByIdAsc(lastEntryId);
+    }
+
 }
