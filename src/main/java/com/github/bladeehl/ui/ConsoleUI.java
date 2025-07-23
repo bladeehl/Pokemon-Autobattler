@@ -9,6 +9,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.NonNull;
 import lombok.val;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,17 +19,17 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(makeFinal = true)
 @Slf4j
 public class ConsoleUI {
-    TrainerService trainerService;
-    PokemonService pokemonService;
-    BattleUI battleUI;
-    IOContext io;
+    @NonNull TrainerService trainerService;
+    @NonNull PokemonService pokemonService;
+    @NonNull BattleUI battleUI;
+    @NonNull IOContext ioContext;
 
     public void run() {
         while (true) {
             val trainer = showTrainerMenu();
 
             if (trainer == null) {
-                io.println("Выход");
+                ioContext.println("Выход");
                 break;
             }
 
@@ -37,7 +39,7 @@ public class ConsoleUI {
 
     private Trainer showTrainerMenu() {
         while (true) {
-            io.println("""
+            ioContext.println("""
                 
                 --- Тренерское меню ---
                 1. Создать тренера
@@ -45,7 +47,7 @@ public class ConsoleUI {
                 0. Выход
                 """);
 
-            val userChoice = io.promptForInt("Ваш выбор: ");
+            val userChoice = ioContext.promptForInt("Ваш выбор: ");
 
             switch (userChoice) {
                 case 1 -> {
@@ -63,46 +65,75 @@ public class ConsoleUI {
                 }
                 default -> {
                     log.warn("Пользователь ввёл некорректный выбор в меню тренеров: {}", userChoice);
-                    io.println("Неверный выбор. Попробуйте снова.");
+                    ioContext.println("Неверный выбор. Попробуйте снова.");
                 }
             }
         }
     }
 
     private Trainer handleCreateTrainer() {
-        val trainerName = io.promptForString("Введите имя: ");
+        val trainerName = ioContext.promptForString("Введите имя: ");
         val newTrainer = trainerService.createTrainer(trainerName);
 
-        io.println("Тренер создан.");
+        ioContext.println("Тренер создан.");
 
         return newTrainer;
     }
 
     private Trainer handleSelectTrainer() {
-        val allTrainers = trainerService.getAll();
-
-        if (allTrainers.isEmpty()) {
-            io.println("Тренеров нет.");
-            return null;
-        }
-
-        io.printTrainers(allTrainers);
+        val pageSize = 10;
+        var currentPage = 0;
 
         while (true) {
-            val selectedIndex = io.promptForInt("Выберите номер: ");
+            val pageable = PageRequest.of(currentPage, pageSize, Sort.by("id"));
+            val page = trainerService.getAll(pageable);
+
+            if (page.getContent().isEmpty()) {
+                ioContext.println("Тренеров нет.");
+                return null;
+            }
+
+            ioContext.printf("Список тренеров (страница %d из %d):%n", currentPage + 1, page.getTotalPages());
+            ioContext.printTrainers(page.getContent());
+
+            ioContext.println("Введите номер тренера, -1 для предыдущей страницы, 0 для следующей:");
+            val input = ioContext.promptForInt("Выберите номер: ");
+
+            if (input == -1) {
+                if (currentPage <= 0) {
+                    ioContext.println("Это первая страница.");
+                    continue;
+                }
+
+                currentPage--;
+                continue;
+            }
+
+            if (input == 0) {
+                if (currentPage >= page.getTotalPages() - 1) {
+                    ioContext.println("Это последняя страница.");
+                    continue;
+                }
+
+                currentPage++;
+                continue;
+            }
 
             try {
-                return trainerService.getTrainerByIndex(selectedIndex);
+                val globalIndex = (currentPage * pageSize) + input;
+
+                return trainerService.getTrainerByIndex(globalIndex);
             } catch (TrainerNotFoundException thrown) {
-                log.warn("Некорректный индекс: {}", selectedIndex);
-                io.println("Некорректный выбор. Попробуйте снова.");
+                log.warn("Некорректный индекс: {}", input);
+                ioContext.println("Некорректный выбор. Попробуйте снова.");
             }
         }
     }
 
+
     private void showTrainerActions(@NonNull final Trainer trainer) {
         while (true) {
-            io.printf("""
+            ioContext.printf("""
             
             --- Меню %s ---
             1. Начать бой
@@ -114,7 +145,7 @@ public class ConsoleUI {
             """,
             trainer.getName());
 
-            val userChoice = io.promptForInt("Выбор: ");
+            val userChoice = ioContext.promptForInt("Выбор: ");
 
             switch (userChoice) {
                 case 1 -> battleUI.startBattle(trainer);
@@ -128,22 +159,22 @@ public class ConsoleUI {
 
                 default -> {
                     log.warn("Пользователь ввёл некорректный вариант в меню тренера: {}", userChoice);
-                    io.println("Неверный выбор. Попробуйте снова.");
+                    ioContext.println("Неверный выбор. Попробуйте снова.");
                 }
             }
         }
     }
 
     private void createPokemon(@NonNull final Trainer trainer) {
-        val type = io.promptForInt("Выберите тип покемона (1 - Огненный, 2 - Водяной): ");
-        val name = io.promptForString("Имя: ");
-        val hp = io.promptForInt("Здоровье: ");
-        val damage = io.promptForInt("Урон: ");
+        val type = ioContext.promptForInt("Выберите тип покемона (1 - Огненный, 2 - Водяной): ");
+        val name = ioContext.promptForString("Имя: ");
+        val hp = ioContext.promptForInt("Здоровье: ");
+        val damage = ioContext.promptForInt("Урон: ");
 
         switch (type) {
             case 1 -> {
-                val fireRes = io.promptForInt("Огненная защита: ");
-                val firePwr = io.promptForInt("Огненная сила: ");
+                val fireRes = ioContext.promptForInt("Огненная защита: ");
+                val firePwr = ioContext.promptForInt("Огненная сила: ");
 
                 pokemonService.saveFirePokemon(
                     trainer,
@@ -154,8 +185,8 @@ public class ConsoleUI {
                     firePwr);
             }
             case 2 -> {
-                val waterRes = io.promptForInt("Водная защита: ");
-                val waterPwr = io.promptForInt("Водная сила: ");
+                val waterRes = ioContext.promptForInt("Водная защита: ");
+                val waterPwr = ioContext.promptForInt("Водная сила: ");
 
                 pokemonService.saveWaterPokemon(
                     trainer,
@@ -174,15 +205,15 @@ public class ConsoleUI {
     private void showPokemons(@NonNull final Trainer trainer) {
         val pokemons = pokemonService.getByTrainer(trainer);
 
-        io.printPokemons(pokemons);
+        ioContext.printPokemons(pokemons);
     }
 
     private void updatePokemon(@NonNull final Trainer trainer) {
         val pokemons = pokemonService.getByTrainer(trainer);
 
-        io.printPokemons(pokemons);
+        ioContext.printPokemons(pokemons);
 
-        val selectedIndex = io.promptForInt("Выберите покемона: ");
+        val selectedIndex = ioContext.promptForInt("Выберите покемона: ");
 
         if (selectedIndex < 1 || selectedIndex > pokemons.size()) {
             log.warn("Некорректный выбор покемона");
@@ -191,22 +222,23 @@ public class ConsoleUI {
 
         val selectedPokemon = pokemons.get(selectedIndex - 1);
 
-        io.println("""
+        ioContext.println("""
         1. Имя
         2. HP
         3. Урон
         """);
 
-        val fieldChoice = io.promptForInt("Что изменить: ");
+        val fieldChoice = ioContext.promptForInt("Что изменить: ");
 
         switch (fieldChoice) {
             case 1 -> {
-                val newName = io.promptForString("Новое имя: ");
+                val newName = ioContext.promptForString("Новое имя: ");
+
                 selectedPokemon.setName(newName);
             }
-            case 2 -> selectedPokemon.setHealth(io.promptForInt("Новое здоровье: "));
-            case 3 -> selectedPokemon.setDamage(io.promptForInt("Новый урон: "));
-            default -> io.println("Неверный выбор.");
+            case 2 -> selectedPokemon.setHealth(ioContext.promptForInt("Новое здоровье: "));
+            case 3 -> selectedPokemon.setDamage(ioContext.promptForInt("Новый урон: "));
+            default -> ioContext.println("Неверный выбор.");
         }
 
         pokemonService.updatePokemon(selectedPokemon);
@@ -215,15 +247,16 @@ public class ConsoleUI {
     private void deletePokemon(@NonNull final Trainer trainer) {
         val pokemons = pokemonService.getByTrainer(trainer);
 
-        io.printPokemons(pokemons);
+        ioContext.printPokemons(pokemons);
 
-        val selectedIndex = io.promptForInt("Удалить покемона номер: ");
+        val selectedIndex = ioContext.promptForInt("Удалить покемона номер: ");
+
         if (selectedIndex > 0
             && selectedIndex <= pokemons.size()) {
             pokemonService.deletePokemon(pokemons.get(selectedIndex - 1));
         } else {
             log.warn("Некорректный выбор при удалении покемона: {}", selectedIndex);
-            io.println("Некорректный выбор.");
+            ioContext.println("Некорректный выбор.");
         }
     }
 }

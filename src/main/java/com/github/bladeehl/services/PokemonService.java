@@ -17,6 +17,7 @@ import java.util.List;
 public class PokemonService {
     PokemonRepository pokemonRepository;
 
+    @Transactional
     public FirePokemon saveFirePokemon(
         @NonNull final Trainer trainer,
         @NonNull final String name,
@@ -53,33 +54,20 @@ public class PokemonService {
             .build());
     }
 
-    @Transactional
-    public void updatePokemon(final @NonNull Pokemon pokemon) {
+    public void updatePokemon(@NonNull final Pokemon pokemon) {
         pokemonRepository.save(pokemon);
     }
 
-    @Transactional
-    public void deletePokemon(final @NonNull Pokemon pokemon) {
+    public void deletePokemon(@NonNull final Pokemon pokemon) {
         pokemonRepository.delete(pokemon);
     }
 
-    @Transactional(readOnly = true)
-    public Pokemon getById(Long id) {
+    public Pokemon getById(@NonNull final Long id) {
         return pokemonRepository.findById(id)
             .orElseThrow(() -> new PokemonNotFoundException("Покемон с id %d не найден".formatted(id)));
     }
 
-    @Transactional(readOnly = true)
-    public List<Pokemon> getByTrainer(final @NonNull Trainer trainer) {
+    public List<Pokemon> getByTrainer(@NonNull final Trainer trainer) {
         return pokemonRepository.findByTrainer(trainer);
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        if (!pokemonRepository.existsById(id)) {
-            throw new PokemonNotFoundException("Покемон с id %d не найден для удаления".formatted(id));
-        }
-
-        pokemonRepository.deleteById(id);
     }
 }

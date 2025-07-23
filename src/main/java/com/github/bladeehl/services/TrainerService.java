@@ -5,22 +5,21 @@ import com.github.bladeehl.model.Trainer;
 import com.github.bladeehl.repositories.TrainerRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true)
 @Slf4j
 public class TrainerService {
-    TrainerRepository trainerRepository;
+    final TrainerRepository trainerRepository;
 
-    @Transactional
     public Trainer createTrainer(@NonNull final String name) {
         return trainerRepository.save(
             Trainer.builder()
@@ -28,39 +27,25 @@ public class TrainerService {
             .build());
     }
 
-    @Transactional(readOnly = true)
-    public Trainer getTrainerByIndex(int index) {
-        val trainers = trainerRepository.findAll();
+    public Trainer getTrainerByIndex(@NonNull final int index) {
+        val pageSize = 10;
+        val pageNumber = (index - 1) / pageSize;
+        val positionInPage = (index - 1) % pageSize;
+        val pageable = PageRequest.of(
+            pageNumber,
+            pageSize,
+            Sort.by("id"));
+        val page = trainerRepository.findAll(pageable);
 
-        if (index < 1 || index > trainers.size()) {
+        if (page.getTotalElements() < index || index < 0) {
+            log.error("Тренер с индексом {} не найден, всего тренеров: {}", index, page.getTotalElements());
             throw new TrainerNotFoundException("Некорректный индекс тренера: %d".formatted(index));
         }
 
-        return trainers.get(index - 1);
+        return page.getContent().get(positionInPage);
     }
 
-    @Transactional(readOnly = true)
-    public List<Trainer> getAll() {
-        return trainerRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public Trainer getById(Long id) {
-        return trainerRepository.findById(id)
-            .orElseThrow(() -> new TrainerNotFoundException("Тренер с id %d не найден".formatted(id)));
-    }
-
-    @Transactional
-    public Trainer update(@NonNull final Trainer trainer) {
-        return trainerRepository.save(trainer);
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        if (!trainerRepository.existsById(id)) {
-            throw new TrainerNotFoundException("Невозможно удалить: тренер с id %d не найден".formatted(id));
-        }
-
-        trainerRepository.deleteById(id);
+    public Page<Trainer> getAll(@NonNull final Pageable pageable) {
+        return trainerRepository.findAll(pageable);
     }
 }

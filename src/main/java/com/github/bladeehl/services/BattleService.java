@@ -11,13 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Getter
 @Slf4j
-public class BattleService {
+public class BattleService{
     Pokemon firstPokemon;
     Pokemon secondPokemon;
     boolean isFirstPlayersTurn;
 
-    public void startBattle(@NonNull final Pokemon first,
-                            @NonNull final Pokemon second) {
+    public void startBattle(
+        @NonNull final Pokemon first,
+        @NonNull final Pokemon second) {
+
         this.firstPokemon = first;
         this.secondPokemon = second;
         this.isFirstPlayersTurn = true;
@@ -44,8 +46,10 @@ public class BattleService {
         isFirstPlayersTurn = !isFirstPlayersTurn;
     }
 
-    public int attack(@NonNull final Pokemon playablePokemon,
-                      @NonNull final Pokemon opponentPokemon) {
+    public int attack(
+        @NonNull final Pokemon playablePokemon,
+        @NonNull final Pokemon opponentPokemon) {
+
         return playablePokemon.attack(opponentPokemon);
     }
 
@@ -57,8 +61,10 @@ public class BattleService {
         return playablePokemon.ability();
     }
 
-    public int specialAttack(@NonNull final Pokemon playablePokemon,
-                             @NonNull final Pokemon opponentPokemon) {
+    public int specialAttack(
+        @NonNull final Pokemon playablePokemon,
+        @NonNull final Pokemon opponentPokemon) {
+
         return playablePokemon.specialAttack(opponentPokemon);
     }
 

@@ -45,7 +45,6 @@ public class ConsoleIOContext implements IOContext {
 
     private String safeStringInput() {
         try {
-            in.nextLine();
             return in.nextLine();
         } catch (Exception thrown) {
             log.warn("Ошибка ввода строки", thrown);
@@ -61,19 +60,23 @@ public class ConsoleIOContext implements IOContext {
         }
 
         IntStream.range(0, pokemons.size())
-            .forEach(i -> out.printf(
+            .forEach(index -> out.printf(
                 "%d - %s%n",
-                i + 1,
-                pokemons.get(i).toString()));
+                index + 1,
+                pokemons
+                    .get(index)
+                    .toString()));
     }
 
     @Override
     public void printTrainers(@NonNull final List<Trainer> trainers) {
         IntStream.range(0, trainers.size())
-            .forEach(i -> out.printf(
+            .forEach(index -> out.printf(
                 "%d - %s%n",
-                i + 1,
-                trainers.get(i).getName()));
+                index + 1,
+                trainers
+                    .get(index)
+                    .getName()));
     }
 
     @Override
@@ -82,8 +85,9 @@ public class ConsoleIOContext implements IOContext {
     }
 
     @Override
-    public void printf(@NonNull final String format,
-                       @NonNull final Object... args) {
+    public void printf(
+        @NonNull final String format,
+        @NonNull final Object... args) {
         out.printf(format, args);
     }
 }

@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface PokemonRepository extends JpaRepository<Pokemon, Long> {
-    List<Pokemon> findByTrainer(@NonNull final Trainer trainer);
+    List<Pokemon> findByTrainer(@NonNull Trainer trainer);
 }

@@ -1,6 +1,7 @@
 package com.github.bladeehl.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,8 +22,8 @@ public abstract class Pokemon implements Serializable {
     Long id;
 
     String name;
-    Integer health;
-    Integer damage;
+    @Nullable Integer health;
+    @Nullable Integer damage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id")

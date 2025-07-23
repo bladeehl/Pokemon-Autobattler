@@ -1,5 +1,6 @@
 package com.github.bladeehl.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.NonNull;
@@ -12,8 +13,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class WaterPokemon extends Pokemon {
-    Integer waterResistance;
-    Integer waterPower;
+    @Nullable Integer waterResistance;
+    @Nullable Integer waterPower;
 
     @Override
     public int specialAttack(final @NonNull Pokemon target) {

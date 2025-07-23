@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
-    record ErrorResponse(String message, String details) {}
+    class GlobalExceptionHandler {
+    record ErrorResponse(
+        @NonNull String message,
+        @NonNull String details) {}
 
     @ExceptionHandler(EqualPokemonsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleEqualPokemonsException(
         @NonNull final EqualPokemonsException thrown) {
+
         return new ErrorResponse("Bad Request", thrown.getMessage());
     }
 
@@ -25,6 +28,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBattleEndedException(
         @NonNull final BattleEndedException thrown) {
+
         return new ErrorResponse("Bad Request", thrown.getMessage());
     }
 
@@ -32,6 +36,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBattleNotEndedException(
         @NonNull final BattleNotEndedException thrown) {
+
         return new ErrorResponse("Bad Request", thrown.getMessage());
     }
 
@@ -39,6 +44,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnsupportedPokemonTypeException(
         @NonNull final UnsupportedPokemonTypeException thrown) {
+
         return new ErrorResponse("Bad Request", thrown.getMessage());
     }
 }

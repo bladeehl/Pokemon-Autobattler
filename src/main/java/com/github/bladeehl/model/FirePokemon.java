@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.NonNull;
 
 import lombok.experimental.SuperBuilder;
-
+import org.springframework.lang.Nullable;
 
 @Entity
 @DiscriminatorValue("Fire")
@@ -13,8 +13,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class FirePokemon extends Pokemon {
-    Integer fireResistance;
-    Integer firePower;
+    @Nullable Integer fireResistance;
+    @Nullable Integer firePower;
 
     @Override
     public int specialAttack(@NonNull final Pokemon target) {
