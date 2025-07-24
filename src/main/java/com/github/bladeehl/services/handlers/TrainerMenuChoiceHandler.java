@@ -9,6 +9,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
+import static com.github.bladeehl.io.TrainerWebIO.*;
+import static com.github.bladeehl.io.UtilWebIO.*;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -20,13 +23,13 @@ public class TrainerMenuChoiceHandler {
         @NonNull final String input,
         @NonNull final StringBuilder output) {
 
-        val choice = UtilWebIO.parseInt(input, output);
+        val choice = UtilWebIO.parseInt(input, output).orElse(-1);
 
         switch (choice) {
             case 1 -> {
                 sessionState.setState("createTrainer");
                 sessionState.setInputType("trainerName");
-                output.append(TrainerWebIO.getCreateTrainerPrompt());
+                output.append(CREATE_TRAINER_PROMPT);
             }
             case 2 -> {
                 sessionState.setState("selectTrainer");
@@ -36,7 +39,7 @@ public class TrainerMenuChoiceHandler {
                 output.append("Выход");
                 sessionState.setState(null);
             }
-            default -> output.append(UtilWebIO.getInvalidChoiceMessage());
+            default -> output.append(INVALID_CHOICE);
         }
     }
 }

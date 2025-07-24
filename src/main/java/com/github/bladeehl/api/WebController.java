@@ -61,6 +61,7 @@ public class WebController {
     public String sendConsoleInput(
         @NonNull
         @RequestBody
+
         final String input) {
 
         return consoleWebService.processInput(input);
@@ -103,6 +104,7 @@ public class WebController {
     public List<ConsoleHistory> getHistorySince(
         @Parameter(description = "ID записи, начиная с которой нужно вернуть историю")
         @RequestParam
+
         final long lastEntryId) {
 
         return consoleWebService.getHistorySince(lastEntryId);

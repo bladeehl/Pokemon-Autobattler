@@ -12,6 +12,9 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import static com.github.bladeehl.io.PokemonWebIO.*;
+import static com.github.bladeehl.io.UtilWebIO.*;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -29,10 +32,10 @@ public class UpdatePokemonHandler {
 
         try {
             val data = input.split(" ");
-            val index = UtilWebIO.parseInt(data[0].trim(), output) - 1;
+            val index = UtilWebIO.parseInt(input, output).orElse(-1);
 
             if (index < 0 || index >= pokemons.size()) {
-                output.append(UtilWebIO.getInvalidChoiceMessage());
+                output.append(INVALID_CHOICE);
                 output.append(PokemonWebIO.getSelectPokemonToUpdatePrompt(pokemons));
                 return;
             }
@@ -44,8 +47,26 @@ public class UpdatePokemonHandler {
 
             switch (field) {
                 case "name" -> pokemon.setName(value);
-                case "hp" -> pokemon.setHealth(UtilWebIO.parseInt(value, output));
-                case "damage" -> pokemon.setDamage(UtilWebIO.parseInt(value, output));
+                case "hp" ->{
+                    val optValue = UtilWebIO.parseInt(value, output);
+
+                    if (optValue.isEmpty()) {
+                        output.append("Неверный ввод.");
+                        return;
+                    }
+
+                    pokemon.setHealth(optValue.getAsInt());
+                }
+                case "damage" -> {
+                    val optValue = UtilWebIO.parseInt(value, output);
+
+                    if (optValue.isEmpty()) {
+                        output.append("Неверный ввод.");
+                        return;
+                    }
+
+                    pokemon.setDamage(optValue.getAsInt());
+                }
                 default -> {
                     output.append("Неверное поле.");
                     output.append(PokemonWebIO.getSelectPokemonToUpdatePrompt(pokemons));
@@ -54,7 +75,7 @@ public class UpdatePokemonHandler {
             }
 
             pokemonService.updatePokemon(pokemon);
-            output.append(PokemonWebIO.getPokemonUpdatedMessage());
+            output.append(POKEMON_UPDATED_MESSAGE);
             sessionState.setState("trainerActions");
             output.append(TrainerWebIO.getTrainerActions(trainer));
             sessionState.setInputType("trainerActionChoice");

@@ -16,6 +16,11 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 
+import static com.github.bladeehl.io.PokemonWebIO.*;
+import static com.github.bladeehl.io.TrainerWebIO.*;
+import static com.github.bladeehl.model.InputType.*;
+import static com.github.bladeehl.model.State.*;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -44,21 +49,21 @@ class ConsoleWebServiceImpl implements ConsoleWebService {
         val output = new StringBuilder();
 
         try {
-            switch (sessionState.getState() != null
-                ? sessionState.getState()
-                : "trainerMenu") {
+            switch (UtilWebIO.parseState(sessionState.getState()) != null
+                ? UtilWebIO.parseState(sessionState.getState())
+                : TRAINER_MENU) {
 
-                case "trainerMenu" -> output.append(TrainerWebIO.getTrainerMenu());
-                case "createTrainer" -> output.append(TrainerWebIO.getCreateTrainerPrompt());
-                case "selectTrainer" -> selectTrainerHandler.handle(output);
-                case "trainerActions" -> output.append(TrainerWebIO.getTrainerActions(sessionState.getTrainer()));
-                case "createPokemon" -> output.append(PokemonWebIO.getCreatePokemonPrompt());
-                case "selectPokemonForBattle" -> selectPokemonForBattleHandler.handle(output);
-                case "selectSecondPokemon" -> output.append(PokemonWebIO.getSelectSecondPokemonPrompt(pokemonService.getByTrainer(sessionState.getTrainer())));
-                case "battle" -> output.append(battleWebService.getCurrentOutput());
-                case "updatePokemon" -> updatePokemonOutputHandler.handle(output);
-                case "deletePokemon" -> output.append(PokemonWebIO.getDeletePokemonPrompt(pokemonService.getByTrainer(sessionState.getTrainer())));
-                case "showPokemons" -> showPokemonsHandler.handle(output);
+                case TRAINER_MENU -> output.append(TRAINER_MENU_PROMT);
+                case CREATE_TRAINER -> output.append(CREATE_TRAINER_PROMPT);
+                case SELECT_TRAINER -> selectTrainerHandler.handle(output);
+                case TRAINER_ACTIONS -> output.append(TrainerWebIO.getTrainerActions(sessionState.getTrainer()));
+                case CREATE_POKEMON -> output.append(CREATE_POKEMON_PROMPT);
+                case SELECT_POKEMON_FOR_BATTLE -> selectPokemonForBattleHandler.handle(output);
+                case SELECT_SECOND_POKEMON -> output.append(PokemonWebIO.getSelectSecondPokemonPrompt(pokemonService.getByTrainer(sessionState.getTrainer())));
+                case BATTLE -> output.append(battleWebService.getCurrentOutput());
+                case UPDATE_POKEMON -> updatePokemonOutputHandler.handle(output);
+                case DELETE_POKEMON  -> output.append(PokemonWebIO.getDeletePokemonPrompt(pokemonService.getByTrainer(sessionState.getTrainer())));
+                case SHOW_POKEMONS-> showPokemonsHandler.handle(output);
                 default -> {
                     log.error("Неизвестное состояние: {}", sessionState.getState());
                     commonHandlers.returnToTrainerMenu(output, sessionState);
@@ -80,28 +85,27 @@ class ConsoleWebServiceImpl implements ConsoleWebService {
             .build();
 
         try {
-            switch (sessionState.getInputType() != null
-                ? sessionState.getInputType()
-                : "trainerMenuChoice") {
+            switch (UtilWebIO.parseInputType(sessionState.getInputType()) != null
+                ? UtilWebIO.parseInputType(sessionState.getInputType())
+                : TRAINER_MENU) {
 
-                case "trainerMenuChoice" -> trainerMenuChoiceHandler.handle(input, output);
-                case "trainerName" -> trainerNameHandler.handle(input, output);
-                case "trainerIndex" -> trainerIndexHandler.handle(input, output);
-                case "trainerActionChoice" -> trainerActionChoiceHandler.handle(input, output);
-                case "createPokemon" -> createPokemonHandler.handle(input, output);
-                case "firstPokemonIndex" -> firstPokemonIndexHandler.handle(input, output);
-                case "secondPokemonIndex" -> secondPokemonIndexHandler.handle(input, output);
-                case "battleChoice" -> output.append(battleWebService.processInput(input));
-                case "updatePokemon" -> updatePokemonHandler.handle(input, output);
-                case "deletePokemonIndex" -> deletePokemonIndexHandler.handle(input, output);
+                case TRAINER_MENU_CHOICE -> trainerMenuChoiceHandler.handle(input, output);
+                case TRAINER_NAME -> trainerNameHandler.handle(input, output);
+                case TRAINER_INDEX -> trainerIndexHandler.handle(input, output);
+                case TRAINER_ACTION_CHOICE -> trainerActionChoiceHandler.handle(input, output);
+                case CREATE_POKEMON_MENU -> createPokemonHandler.handle(input, output);
+                case FIRST_POKEMON_INDEX -> firstPokemonIndexHandler.handle(input, output);
+                case SECOND_POKEMON_INDEX -> secondPokemonIndexHandler.handle(input, output);
+                case BATTLE_CHOICE -> output.append(battleWebService.processInput(input));
+                case UPDATE_POKEMON_MENU -> updatePokemonHandler.handle(input, output);
+                case DELETE_POKEMON_INDEX -> deletePokemonIndexHandler.handle(input, output);
                 default -> {
                     log.error("Неизвестный ввод: {}", sessionState.getInputType());
                     commonHandlers.returnToTrainerMenu(output, sessionState);
                 }
             }
         } catch (Exception thrown) {
-            log.error("Error in processInput: input={}, state={}, inputType={}",
-                input, sessionState.getState(), sessionState.getInputType(), thrown);
+            log.error("Ошибка: {}", thrown.getMessage(), thrown);
             output.append(UtilWebIO.getErrorMessage(thrown.getMessage()));
         }
 

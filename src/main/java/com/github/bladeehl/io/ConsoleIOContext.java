@@ -21,7 +21,7 @@ public class ConsoleIOContext implements IOContext {
 
     public ConsoleIOContext() {
         this.in = new Scanner(System.in);
-        this.out = new PrintStream(System.out, true);
+        this.out = System.out;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ConsoleIOContext implements IOContext {
         while (true) {
             out.print(prompt);
             try {
-                return Integer.parseInt(in.next());
+                return Integer.parseInt(in.nextLine());
             } catch (NumberFormatException thrown) {
                 log.warn("Ошибка ввода числа, попробуйте ещё раз", thrown);
                 out.println("Ошибка: введите корректное целое число.");

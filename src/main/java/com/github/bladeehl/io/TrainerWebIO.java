@@ -2,37 +2,30 @@ package com.github.bladeehl.io;
 
 import com.github.bladeehl.model.Trainer;
 import lombok.NonNull;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @UtilityClass
-public class TrainerWebIO {
-    public String getTrainerMenu() {
-        return """
-                --- Тренерское меню ---
-                1. Создать тренера
-                2. Выбрать тренера
-                0. Выход
-                
-                Ваш выбор: """;
-    }
+@FieldDefaults(makeFinal = true)
 
-    public String getCreateTrainerPrompt() {
-        return "Введите имя: ";
-    }
+public class TrainerWebIO {
+    public String TRAINER_MENU_PROMT = """
+            --- Тренерское меню ---
+            1. Создать тренера
+            2. Выбрать тренера
+            0. Выход
+
+            Ваш выбор: """;
+
+    public String CREATE_TRAINER_PROMPT = "Введите имя: ";
+    public String NO_TRAINERS_MESSAGE = "Тренеров нет.";
 
     public String getSelectTrainerPrompt(@NonNull final List<Trainer> trainers) {
-        val output = new StringBuilder();
-
-        appendTrainers(output, trainers);
-        output.append("Выберите номер: ");
-        return output.toString();
-    }
-
-    public String getNoTrainersMessage() {
-        return "Тренеров нет.";
+        return formatTrainerPrompt(trainers, "Выберите номер: ");
     }
 
     public String getTrainerActions(@NonNull final Trainer trainer) {
@@ -44,22 +37,37 @@ public class TrainerWebIO {
                 4. Удалить покемона
                 5. Показать покемонов
                 0. Назад
-                
+
                 Выбор: """
-                .formatted(trainer.getName());
+            .formatted(trainer.getName());
+    }
+
+    private String formatTrainerPrompt(
+        @NonNull final List<Trainer> trainers,
+        @NonNull final String prompt) {
+
+        val output = new StringBuilder();
+        appendTrainers(output, trainers);
+        output.append(prompt);
+
+        return output.toString();
     }
 
     public void appendTrainers(
-            @NonNull final StringBuilder output,
-            @NonNull final List<Trainer> trainers) {
+        @NonNull final StringBuilder output,
+        @NonNull final List<Trainer> trainers) {
 
         if (trainers.isEmpty()) {
-            output.append("Тренеров нет.\n");
+            output.append(NO_TRAINERS_MESSAGE).append(System.lineSeparator());
+
             return;
         }
-        trainers.stream()
-                .map(trainer -> "%d - %s%n".formatted(trainers.indexOf(trainer) + 1,
-                        trainer.getName()))
-                .forEach(output::append);
+
+        IntStream.range(0, trainers.size())
+            .mapToObj(i -> "%d - %s%n".formatted(i + 1,
+                trainers
+                    .get(i)
+                    .getName()))
+            .forEach(output::append);
     }
 }

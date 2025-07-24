@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import static com.github.bladeehl.io.UtilWebIO.*;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -30,7 +32,7 @@ public class TrainerIndexHandler {
 
         val pageable = PageRequest.of(sessionState.getCurrentPage(), PAGE_SIZE, Sort.by("id"));
         val page = trainerService.getAll(pageable);
-        val index = UtilWebIO.parseInt(input, output);
+        val index = UtilWebIO.parseInt(input, output).orElse(-1) - 1;
 
         if (index == -1) {
             if (sessionState.getCurrentPage() <= 0) {
@@ -64,7 +66,7 @@ public class TrainerIndexHandler {
             sessionState.setInputType("trainerActionChoice");
         } catch (TrainerNotFoundException thrown) {
             log.warn("Некорректный индекс тренера: {}", input);
-            output.append(UtilWebIO.getInvalidChoiceMessage());
+            output.append(INVALID_CHOICE);
             selectTrainerHandler.handle(output);
         }
     }

@@ -48,15 +48,15 @@ class ConsoleBattleWebServiceImpl implements ConsoleBattleWebService {
         val output = new StringBuilder();
 
         try {
-            val choice = UtilWebIO.parseInt(input, output);
+            val choice = UtilWebIO.parseBattleAction(input);
 
             switch (choice) {
-                case 1 -> attackHandler.handle(output);
-                case 2 -> defendHandler.handle(output);
-                case 3 -> useAbilityHandler.handle(output);
-                case 4 -> specialAttackHandler.handle(output);
-                case 5 -> defensiveAbilityHandler.handle(output);
-                case 6 -> evolveHandler.handle(output);
+                case ATTACK -> attackHandler.handle(output);
+                case DEFEND -> defendHandler.handle(output);
+                case USE_ABILITY -> useAbilityHandler.handle(output);
+                case SPECIAL_ATTACK -> specialAttackHandler.handle(output);
+                case DEFENSIVE_ABILITY -> defensiveAbilityHandler.handle(output);
+                case EVOLVE -> evolveHandler.handle(output);
                 default -> output.append("Пропуск хода");
             }
 

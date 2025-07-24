@@ -2,10 +2,15 @@ package com.github.bladeehl.io;
 
 import com.github.bladeehl.model.Pokemon;
 import lombok.NonNull;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
+@FieldDefaults(makeFinal = true)
 public class BattleWebIO {
+    public String BATTLE_DEFENSIVE_ABILITY = "🛡️ Защитная способность активирована.";
+    public String BATTLE_EVOLVE = "🆙 Эволюция завершена!";
+
     public String getBattleStart(
             @NonNull final Pokemon firstPokemon,
             @NonNull final Pokemon secondPokemon) {
@@ -55,14 +60,6 @@ public class BattleWebIO {
 
     public String getBattleSpecialAttack(int damage) {
         return "🔥 Спец. атака нанесла %d урона%n".formatted(damage);
-    }
-
-    public String getBattleDefensiveAbility() {
-        return "🛡️ Защитная способность активирована.";
-    }
-
-    public String getBattleEvolve() {
-        return "🆙 Эволюция завершена!";
     }
 
     public String getBattleStatus(

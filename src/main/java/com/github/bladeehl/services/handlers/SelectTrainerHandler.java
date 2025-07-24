@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import static com.github.bladeehl.io.TrainerWebIO.*;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -24,7 +26,7 @@ public class SelectTrainerHandler {
         val page = trainerService.getAll(pageable);
 
         if (page.getContent().isEmpty()) {
-            output.append(TrainerWebIO.getNoTrainersMessage());
+            output.append(NO_TRAINERS_MESSAGE);
             sessionState.setState("trainerMenu");
             sessionState.setInputType("trainerMenuChoice");
             return;

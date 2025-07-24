@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
+import static com.github.bladeehl.io.TrainerWebIO.*;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -25,7 +27,7 @@ public class CommonHandlers {
         @NonNull final ConsoleSessionState sessionState) {
 
         sessionState.setState("trainerMenu");
-        output.append(TrainerWebIO.getTrainerMenu());
+        output.append(TRAINER_MENU_PROMT);
         sessionState.setInputType("trainerMenuChoice");
     }
 }

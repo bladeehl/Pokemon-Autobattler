@@ -11,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
+import static com.github.bladeehl.io.UtilWebIO.*;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -24,10 +26,10 @@ public class FirstPokemonIndexHandler {
 
         val trainer = sessionState.getTrainer();
         val pokemons = pokemonService.getByTrainer(trainer);
-        val index = UtilWebIO.parseInt(input, output) - 1;
+        val index = UtilWebIO.parseInt(input, output).orElse(-1);
 
         if (index < 0 || index >= pokemons.size()) {
-            output.append(UtilWebIO.getInvalidPokemonSelectionMessage());
+            output.append(INVALID_POKEMON_SELECTION);
             sessionState.setState("trainerActions");
             output.append(TrainerWebIO.getTrainerActions(trainer));
             sessionState.setInputType("trainerActionChoice");

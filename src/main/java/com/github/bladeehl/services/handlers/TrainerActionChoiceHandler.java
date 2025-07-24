@@ -6,10 +6,13 @@ import com.github.bladeehl.services.ConsoleSessionState;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import com.github.bladeehl.io.TrainerWebIO;
 import com.github.bladeehl.io.UtilWebIO;
 import lombok.val;
 import org.springframework.stereotype.Component;
+
+import static com.github.bladeehl.io.PokemonWebIO.*;
+import static com.github.bladeehl.io.TrainerWebIO.*;
+import static com.github.bladeehl.io.UtilWebIO.*;
 
 @Component
 @RequiredArgsConstructor
@@ -25,7 +28,7 @@ public class TrainerActionChoiceHandler {
         @NonNull final String input,
         @NonNull final StringBuilder output) {
 
-        val choice = UtilWebIO.parseInt(input, output);
+        val choice = UtilWebIO.parseInt(input, output).orElse(-1);
 
         switch (choice) {
             case 1 -> {
@@ -34,7 +37,7 @@ public class TrainerActionChoiceHandler {
             }
             case 2 -> {
                 sessionState.setState("createPokemon");
-                output.append(PokemonWebIO.getCreatePokemonPrompt());
+                output.append(POKEMON_CREATED_MESSAGE);
                 sessionState.setInputType("createPokemon");
             }
             case 3 -> {
@@ -52,10 +55,10 @@ public class TrainerActionChoiceHandler {
             }
             case 0 -> {
                 sessionState.setState("trainerMenu");
-                output.append(TrainerWebIO.getTrainerMenu());
+                output.append(TRAINER_MENU_PROMT);
                 sessionState.setInputType("trainerMenuChoice");
             }
-            default -> output.append(UtilWebIO.getInvalidChoiceMessage());
+            default -> output.append(INVALID_CHOICE);
         }
     }
 }

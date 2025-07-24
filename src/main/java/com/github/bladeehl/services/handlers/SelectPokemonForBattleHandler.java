@@ -10,6 +10,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
+import static com.github.bladeehl.io.PokemonWebIO.*;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -22,7 +24,7 @@ public class SelectPokemonForBattleHandler {
         val pokemons = pokemonService.getByTrainer(trainer);
 
         if (!trainer.canBattle()) {
-            output.append(PokemonWebIO.getNoPokemonForBattleMessage());
+            output.append(NO_POKEMON_FOR_BATTLE_MESSAGE);
             sessionState.setState("trainerActions");
             output.append(TrainerWebIO.getTrainerActions(trainer));
             sessionState.setInputType("trainerActionChoice");
