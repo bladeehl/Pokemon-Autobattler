@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
 public class CommonHandlers {
-
     public void returnToTrainerActions(
         @NonNull final StringBuilder output,
         @NonNull final ConsoleSessionState sessionState) {

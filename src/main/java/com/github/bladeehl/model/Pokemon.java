@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 import lombok.experimental.SuperBuilder;
 
@@ -18,7 +19,7 @@ import java.io.Serializable;
 @SuperBuilder
 public abstract class Pokemon implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     Long id;
 
     String name;

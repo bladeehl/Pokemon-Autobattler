@@ -2,8 +2,8 @@ package com.github.bladeehl.services.handlers;
 
 import com.github.bladeehl.io.TrainerWebIO;
 import com.github.bladeehl.io.UtilWebIO;
-import com.github.bladeehl.services.PokemonService;
 import com.github.bladeehl.services.ConsoleBattleWebService;
+import com.github.bladeehl.services.PokemonService;
 import com.github.bladeehl.services.ConsoleSessionState;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

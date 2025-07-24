@@ -23,7 +23,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
     name = "Pokemon API",
     description = "API для работы с тренерами и покемонами")
 public class WebController {
-    final ConsoleWebService consoleWebService;
+    @NonNull final ConsoleWebService consoleWebService;
 
     @GetMapping(produces = TEXT_PLAIN_VALUE)
     @ResponseBody

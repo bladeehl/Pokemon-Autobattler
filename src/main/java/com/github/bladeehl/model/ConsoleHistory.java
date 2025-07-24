@@ -2,7 +2,10 @@ package com.github.bladeehl.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.lang.NonNull;
 import java.time.Instant;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "console_history")
@@ -12,15 +15,18 @@ import java.time.Instant;
 @Builder
 public class ConsoleHistory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
-    Instant timestamp;
+    @NonNull
+    private Instant timestamp;
 
     @Column(nullable = false, length = 1000)
-    String input;
+    @NonNull
+    private String input;
 
     @Column(nullable = false, length = 10000)
-    String output;
+    @NonNull
+    private String output;
 }

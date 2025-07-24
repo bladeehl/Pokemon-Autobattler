@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
 public class DefensiveAbilityHandler {
-    @NonNull BattleService battleService;
+    @NonNull
+    BattleService battleService;
 
     public void handle(@NonNull final StringBuilder output) {
         try {
