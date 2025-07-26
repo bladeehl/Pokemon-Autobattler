@@ -1,0 +1,15 @@
+package com.github.bladeehl.model;
+
+public enum State {
+    TRAINER_MENU,
+    CREATE_TRAINER,
+    SELECT_TRAINER,
+    TRAINER_ACTIONS,
+    CREATE_POKEMON,
+    SELECT_POKEMON_FOR_BATTLE,
+    SELECT_SECOND_POKEMON,
+    BATTLE,
+    UPDATE_POKEMON,
+    DELETE_POKEMON,
+    SHOW_POKEMONS
+}

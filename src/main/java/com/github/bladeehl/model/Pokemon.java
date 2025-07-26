@@ -1,9 +1,14 @@
 package com.github.bladeehl.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 import lombok.experimental.SuperBuilder;
+
+import java.io.Serializable;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -12,17 +17,18 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class Pokemon {
+public abstract class Pokemon implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     Long id;
 
     String name;
-    int health;
-    int damage;
+    @Nullable Integer health;
+    @Nullable Integer damage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id")
+    @JsonIgnore
     Trainer trainer;
 
     @Transient
@@ -41,6 +47,10 @@ public abstract class Pokemon {
     public abstract void evolve();
 
     public abstract int ability();
+
+    public abstract int specialAttack(final @NonNull Pokemon target);
+
+    public abstract void defensiveAbility();
 
     public void takeDamage(final int damage) {
         if (immuneNextTurn) {
