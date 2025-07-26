@@ -1,97 +1,36 @@
 package com.github.bladeehl.services;
 
-import com.github.bladeehl.model.FirePokemon;
 import com.github.bladeehl.model.Pokemon;
-import com.github.bladeehl.model.WaterPokemon;
-import lombok.Getter;
-import lombok.val;
+import lombok.NonNull;
 
-@Getter
-public class BattleService {
-    Pokemon firstPokemon;
-    Pokemon secondPokemon;
-    boolean isFirstPlayersTurn;
+public interface BattleService {
+    void startBattle(
+        @NonNull Pokemon first,
+        @NonNull Pokemon second);
 
-    public boolean canBattle(final int numberOfPokemons) {
-        return numberOfPokemons >= 2;
-    }
+    boolean isBattleOver();
 
-    public void startBattle(final Pokemon first, final Pokemon second) {
-        this.firstPokemon = first;
-        this.secondPokemon = second;
-        this.isFirstPlayersTurn = true;
-    }
+    Pokemon getCurrentPlayablePokemon();
 
-    public boolean isBattleOver() {
-        return firstPokemon.getHealth() <= 0
-            || secondPokemon.getHealth() <= 0;
-    }
+    Pokemon getCurrentOpponentPokemon();
 
-    public Pokemon getCurrentPlayablePokemon() {
-        return isFirstPlayersTurn
-            ? firstPokemon
-            : secondPokemon;
-    }
+    void nextTurn();
 
-    public Pokemon getCurrentOpponentPokemon() {
-        return isFirstPlayersTurn
-            ? secondPokemon
-            : firstPokemon;
-    }
+    int attack(
+        @NonNull Pokemon playablePokemon,
+        @NonNull Pokemon opponentPokemon);
 
-    public void nextTurn() {
-        isFirstPlayersTurn = !isFirstPlayersTurn;
-    }
+    void defend(@NonNull Pokemon playablePokemon);
 
-    public int attack(final Pokemon playablePokemon, final Pokemon opponentPokemon) {
-        val hpBefore = opponentPokemon.getHealth();
-        playablePokemon.attack(opponentPokemon);
-        return hpBefore - opponentPokemon.getHealth();
-    }
+    int useAbility(@NonNull Pokemon playablePokemon);
 
-    public void defend(final Pokemon playablePokemon) {
-        playablePokemon.defend();
-    }
+    int specialAttack(
+        @NonNull Pokemon playablePokemon,
+        @NonNull Pokemon opponentPokemon);
 
-    public int useAbility(final Pokemon playablePokemon) {
-        val hpBefore = playablePokemon.getHealth();
-        playablePokemon.ability();
-        return playablePokemon.getHealth() - hpBefore;
-    }
+    void defensiveAbility(@NonNull Pokemon playablePokemon);
 
-    public int specialAttack(final Pokemon playablePokemon, final Pokemon opponentPokemon) {
-        if (playablePokemon instanceof FirePokemon firePokemon) {
-            val hpBefore = opponentPokemon.getHealth();
-            firePokemon.fireBall(opponentPokemon);
-            return hpBefore - opponentPokemon.getHealth();
-        }
+    void evolve(@NonNull Pokemon playablePokemon);
 
-        if (playablePokemon instanceof WaterPokemon waterPokemon) {
-            val hpBefore = opponentPokemon.getHealth();
-            waterPokemon.waveAttack(opponentPokemon);
-            return hpBefore - opponentPokemon.getHealth();
-        }
-
-        return 0;
-    }
-
-    public void defensiveAbility(final Pokemon playablePokemon) {
-        if (playablePokemon instanceof FirePokemon firePokemon) {
-            firePokemon.fireThorns();
-        }
-
-        if (playablePokemon instanceof WaterPokemon waterPokemon) {
-            waterPokemon.waterHide();
-        }
-    }
-
-    public void evolve(final Pokemon playablePokemon) {
-        playablePokemon.evolve();
-    }
-
-    public Pokemon getWinner() {
-        return firstPokemon.getHealth() > 0
-            ? firstPokemon
-            : secondPokemon;
-    }
+    Pokemon getWinner();
 }

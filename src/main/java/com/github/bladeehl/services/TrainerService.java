@@ -1,34 +1,14 @@
 package com.github.bladeehl.services;
 
 import com.github.bladeehl.model.Trainer;
-import com.github.bladeehl.repositories.TrainerRepository;
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+public interface TrainerService {
+    Trainer createTrainer(@NonNull final String name);
 
-@Slf4j
-@UtilityClass
-public class TrainerService {
+    Trainer getTrainerByIndex(final int index);
 
-    private final TrainerRepository trainerRepository = new TrainerRepository();
-
-    public Trainer createTrainer(final String name) {
-        val trainer = Trainer.builder().name(name).build();
-        trainerRepository.saveTrainer(trainer);
-        return trainer;
-    }
-
-    public List<Trainer> getAllTrainers() {
-        return trainerRepository.getAllTrainers();
-    }
-
-    public Trainer getTrainerByIndex(List<Trainer> trainers, int index) {
-        if (index < 1 || index > trainers.size()) {
-            log.warn("Некорректный индекс тренера: {}", index);
-            return null;
-        }
-        return trainers.get(index - 1);
-    }
+    Page<Trainer> getAll(@NonNull final Pageable pageable);
 }
